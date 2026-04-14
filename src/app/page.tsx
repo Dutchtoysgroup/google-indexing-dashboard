@@ -14,7 +14,8 @@ export default async function HomePage() {
       getAllShopsSummary(),
       getAllSnapshots(30),
     ]);
-  } catch {
+  } catch (e) {
+    const msg = e instanceof Error ? e.message : String(e);
     return (
       <div className="py-12 text-center">
         <h2 className="text-xl font-semibold text-slate-900">
@@ -22,6 +23,9 @@ export default async function HomePage() {
         </h2>
         <p className="mt-2 text-slate-500">
           Controleer de DATABASE_URL environment variable.
+        </p>
+        <p className="mt-4 text-xs text-red-400 font-mono max-w-xl mx-auto">
+          {msg}
         </p>
       </div>
     );
