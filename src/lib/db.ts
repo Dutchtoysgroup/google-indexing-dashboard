@@ -76,7 +76,7 @@ export async function getShopSnapshots(
     SELECT date::text, shop_id, total_urls, indexed_count, not_indexed_count, unknown_count
     FROM daily_snapshots
     WHERE shop_id = ${shopId}
-      AND date >= CURRENT_DATE - ${days}
+      AND date >= CURRENT_DATE - make_interval(days => ${days})
     ORDER BY date ASC
   `;
   return rows as DailySnapshot[];
@@ -93,7 +93,7 @@ export async function getAllSnapshots(days: number = 30): Promise<DailySnapshot[
       SUM(not_indexed_count)::int as not_indexed_count,
       SUM(unknown_count)::int as unknown_count
     FROM daily_snapshots
-    WHERE date >= CURRENT_DATE - ${days}
+    WHERE date >= CURRENT_DATE - make_interval(days => ${days})
     GROUP BY date
     ORDER BY date ASC
   `;
