@@ -1,0 +1,177 @@
+"use client";
+
+import { useRouter, useSearchParams, usePathname } from "next/navigation";
+import { UrlRow } from "@/lib/db";
+
+type Props = {
+  urls: UrlRow[];
+  total: number;
+  page: number;
+  pageSize: number;
+};
+
+function VerdictBadge({ verdict }: { verdict: string | null }) {
+  if (verdict === "PASS") {
+    return (
+      <span className="inline-flex items-center rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-700">
+        Indexed
+      </span>
+    );
+  }
+  if (verdict) {
+    return (
+      <span className="inline-flex items-center rounded-full bg-red-100 px-2 py-0.5 text-xs font-medium text-red-700">
+        {verdict}
+      </span>
+    );
+  }
+  return (
+    <span className="inline-flex items-center rounded-full bg-yellow-100 px-2 py-0.5 text-xs font-medium text-yellow-700">
+      Unknown
+    </span>
+  );
+}
+
+export function UrlTable({ urls, total, page, pageSize }: Props) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const totalPages = Math.ceil(total / pageSize);
+
+  function setPage(newPage: number) {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("page", String(newPage));
+    router.push(`${pathname}?${params.toString()}`);
+  }
+
+  function setFilter(key: string, value: string) {
+    const params = new URLSearchParams(searchParams.toString());
+    if (value) {
+      params.set(key, value);
+    } else {
+      params.delete(key);
+    }
+    params.set("page", "1");
+    router.push(`${pathname}?${params.toString()}`);
+  }
+
+  const currentType = searchParams.get("type") ?? "";
+  const currentVerdict = searchParams.get("verdict") ?? "";
+
+  return (
+    <div className="rounded-xl border border-slate-200 bg-white shadow-sm">
+      <div className="flex flex-wrap items-center gap-3 border-b border-slate-200 p-4">
+        <h3 className="font-semibold text-slate-900">
+          URLs ({total.toLocaleString("nl-NL")})
+        </h3>
+
+        <select
+          value={currentType}
+          onChange={(e) => setFilter("type", e.target.value)}
+          className="rounded-lg border border-slate-200 px-3 py-1.5 text-sm"
+        >
+          <option value="">Alle types</option>
+          <option value="product">Product</option>
+          <option value="collection">Collection</option>
+          <option value="page">Page</option>
+          <option value="blog">Blog</option>
+          <option value="faq">FAQ</option>
+        </select>
+
+        <select
+          value={currentVerdict}
+          onChange={(e) => setFilter("verdict", e.target.value)}
+          className="rounded-lg border border-slate-200 px-3 py-1.5 text-sm"
+        >
+          <option value="">Alle statussen</option>
+          <option value="PASS">Geindexeerd</option>
+          <option value="FAIL">Niet geindexeerd</option>
+          <option value="UNKNOWN">Niet gecheckt</option>
+        </select>
+      </div>
+
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="border-b border-slate-100 text-left text-xs text-slate-500">
+              <th className="px-4 py-3 font-medium">URL</th>
+              <th className="px-4 py-3 font-medium">Type</th>
+              <th className="px-4 py-3 font-medium">Status</th>
+              <th className="px-4 py-3 font-medium">Coverage</th>
+              <th className="px-4 py-3 font-medium">Laatst gecheckt</th>
+              <th className="px-4 py-3 font-medium">Pushes</th>
+            </tr>
+          </thead>
+          <tbody>
+            {urls.map((row) => (
+              <tr
+                key={row.id}
+                className="border-b border-slate-50 hover:bg-slate-50"
+              >
+                <td className="max-w-md truncate px-4 py-3">
+                  <a
+                    href={row.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-600 hover:underline"
+                  >
+                    {row.url.replace(/^https?:\/\/www\./, "")}
+                  </a>
+                </td>
+                <td className="px-4 py-3 capitalize text-slate-500">
+                  {row.url_type ?? "-"}
+                </td>
+                <td className="px-4 py-3">
+                  <VerdictBadge verdict={row.verdict} />
+                </td>
+                <td className="px-4 py-3 text-xs text-slate-500">
+                  {row.coverage_state ?? "-"}
+                </td>
+                <td className="px-4 py-3 text-xs text-slate-400">
+                  {row.last_inspected
+                    ? new Date(row.last_inspected).toLocaleDateString("nl-NL")
+                    : "-"}
+                </td>
+                <td className="px-4 py-3 text-center text-slate-500">
+                  {row.push_count}
+                </td>
+              </tr>
+            ))}
+            {urls.length === 0 && (
+              <tr>
+                <td colSpan={6} className="px-4 py-8 text-center text-slate-400">
+                  Geen URLs gevonden.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div className="flex items-center justify-between border-t border-slate-200 px-4 py-3">
+          <p className="text-sm text-slate-500">
+            Pagina {page} van {totalPages}
+          </p>
+          <div className="flex gap-2">
+            <button
+              onClick={() => setPage(page - 1)}
+              disabled={page <= 1}
+              className="rounded-lg border border-slate-200 px-3 py-1.5 text-sm disabled:opacity-40"
+            >
+              Vorige
+            </button>
+            <button
+              onClick={() => setPage(page + 1)}
+              disabled={page >= totalPages}
+              className="rounded-lg border border-slate-200 px-3 py-1.5 text-sm disabled:opacity-40"
+            >
+              Volgende
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
