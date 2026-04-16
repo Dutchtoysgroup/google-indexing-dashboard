@@ -18,6 +18,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "EXIT Toys Indexing Dashboard",
   description: "Monitor de Google indexeringsstatus van alle EXIT Toys webshops",
+  icons: {
+    icon: "/favicon.png",
+  },
 };
 
 export default function RootLayout({
@@ -37,9 +40,9 @@ export default function RootLayout({
               <Image
                 src="/exit-logo.svg"
                 alt="EXIT Toys"
-                width={48}
-                height={34}
-                className="h-[34px] w-auto"
+                width={70}
+                height={52}
+                className="h-[42px] w-auto"
               />
               <div>
                 <h1 className="text-lg font-semibold text-white">
