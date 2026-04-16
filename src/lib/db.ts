@@ -100,6 +100,130 @@ export async function getAllSnapshots(days: number = 30): Promise<DailySnapshot[
   return rows as DailySnapshot[];
 }
 
+// ─── API Log types & queries ───────────────────────────────────
+
+export type ApiLogEntry = {
+  id: number;
+  date: string;
+  shop_id: string;
+  api_type: string;
+  url_count: number;
+  created_at: string;
+};
+
+export type ApiDailySummary = {
+  date: string;
+  indexing: number;
+  inspection: number;
+};
+
+export type TodayUsage = {
+  indexing_today: number;
+  inspection_today: number;
+  indexing_week: number;
+  indexing_month: number;
+};
+
+export type ShopExtraStats = {
+  total_pushes: number;
+  never_pushed: number;
+  never_inspected: number;
+  last_pushed: string | null;
+  last_inspected: string | null;
+};
+
+export async function getApiLog(days: number = 30): Promise<ApiLogEntry[]> {
+  const sql = getDb();
+  const rows = await sql`
+    SELECT id, date::text, shop_id, api_type, url_count, created_at::text
+    FROM api_log
+    WHERE date >= CURRENT_DATE - make_interval(days => ${days})
+    ORDER BY date DESC, created_at DESC
+  `;
+  return rows as ApiLogEntry[];
+}
+
+export async function getApiLogByShop(shopId: string, days: number = 30): Promise<ApiLogEntry[]> {
+  const sql = getDb();
+  const rows = await sql`
+    SELECT id, date::text, shop_id, api_type, url_count, created_at::text
+    FROM api_log
+    WHERE shop_id = ${shopId} AND date >= CURRENT_DATE - make_interval(days => ${days})
+    ORDER BY date DESC, created_at DESC
+  `;
+  return rows as ApiLogEntry[];
+}
+
+export async function getApiDailySummary(days: number = 30): Promise<ApiDailySummary[]> {
+  const sql = getDb();
+  const rows = await sql`
+    SELECT
+      date::text,
+      COALESCE(SUM(url_count) FILTER (WHERE api_type = 'indexing'), 0)::int as indexing,
+      COALESCE(SUM(url_count) FILTER (WHERE api_type = 'inspection'), 0)::int as inspection
+    FROM api_log
+    WHERE date >= CURRENT_DATE - make_interval(days => ${days})
+    GROUP BY date
+    ORDER BY date ASC
+  `;
+  return rows as ApiDailySummary[];
+}
+
+export async function getApiDailySummaryByShop(shopId: string, days: number = 30): Promise<ApiDailySummary[]> {
+  const sql = getDb();
+  const rows = await sql`
+    SELECT
+      date::text,
+      COALESCE(SUM(url_count) FILTER (WHERE api_type = 'indexing'), 0)::int as indexing,
+      COALESCE(SUM(url_count) FILTER (WHERE api_type = 'inspection'), 0)::int as inspection
+    FROM api_log
+    WHERE shop_id = ${shopId} AND date >= CURRENT_DATE - make_interval(days => ${days})
+    GROUP BY date
+    ORDER BY date ASC
+  `;
+  return rows as ApiDailySummary[];
+}
+
+export async function getTodayApiUsage(): Promise<TodayUsage> {
+  const sql = getDb();
+  const rows = await sql`
+    SELECT
+      COALESCE(SUM(url_count) FILTER (WHERE api_type = 'indexing' AND date = CURRENT_DATE), 0)::int as indexing_today,
+      COALESCE(SUM(url_count) FILTER (WHERE api_type = 'inspection' AND date = CURRENT_DATE), 0)::int as inspection_today,
+      COALESCE(SUM(url_count) FILTER (WHERE api_type = 'indexing' AND date >= CURRENT_DATE - INTERVAL '7 days'), 0)::int as indexing_week,
+      COALESCE(SUM(url_count) FILTER (WHERE api_type = 'indexing' AND date >= CURRENT_DATE - INTERVAL '30 days'), 0)::int as indexing_month
+    FROM api_log
+  `;
+  return (rows[0] as TodayUsage) ?? { indexing_today: 0, inspection_today: 0, indexing_week: 0, indexing_month: 0 };
+}
+
+export async function getRecentlyPushedUrls(shopId: string, limit: number = 10): Promise<UrlRow[]> {
+  const sql = getDb();
+  const rows = await sql`
+    SELECT id, shop_id, url, url_type, coverage_state, verdict, last_inspected::text, last_pushed::text, push_count
+    FROM urls
+    WHERE shop_id = ${shopId} AND last_pushed IS NOT NULL AND removed_from_sitemap = FALSE
+    ORDER BY last_pushed DESC
+    LIMIT ${limit}
+  `;
+  return rows as UrlRow[];
+}
+
+export async function getShopExtraStats(shopId: string): Promise<ShopExtraStats> {
+  const sql = getDb();
+  const rows = await sql`
+    SELECT
+      COALESCE(SUM(push_count), 0)::int as total_pushes,
+      COUNT(*) FILTER (WHERE push_count = 0 AND verdict IS NOT NULL AND verdict != 'PASS')::int as never_pushed,
+      COUNT(*) FILTER (WHERE last_inspected IS NULL)::int as never_inspected,
+      MAX(last_pushed)::text as last_pushed,
+      MAX(last_inspected)::text as last_inspected
+    FROM urls
+    WHERE shop_id = ${shopId} AND removed_from_sitemap = FALSE
+  `;
+  return (rows[0] as ShopExtraStats) ?? { total_pushes: 0, never_pushed: 0, never_inspected: 0, last_pushed: null, last_inspected: null };
+}
+
 export async function getShopUrls(
   shopId: string,
   filters: {

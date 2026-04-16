@@ -32,6 +32,33 @@ function VerdictBadge({ verdict }: { verdict: string | null }) {
   );
 }
 
+function PushCountBadge({ count }: { count: number }) {
+  if (count === 0) return <span className="text-slate-300">-</span>;
+  let bg = "bg-purple-100 text-purple-700";
+  if (count >= 5) bg = "bg-orange-100 text-orange-700";
+  else if (count >= 3) bg = "bg-purple-200 text-purple-800";
+  return (
+    <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${bg}`}>
+      {count}x
+    </span>
+  );
+}
+
+const COVERAGE_LABELS: Record<string, string> = {
+  "Submitted and indexed": "Ingediend & geindexeerd",
+  "Crawled - currently not indexed": "Gecrawled - niet geindexeerd",
+  "Discovered - currently not indexed": "Ontdekt - niet geindexeerd",
+  "URL is unknown to Google": "Onbekend bij Google",
+  "Excluded by 'noindex' tag": "Uitgesloten door noindex",
+  "Blocked by robots.txt": "Geblokkeerd door robots.txt",
+  "Page with redirect": "Redirect",
+  "Duplicate without user-selected canonical": "Duplicaat (geen canonical)",
+  "Duplicate, Google chose different canonical than user": "Duplicaat (andere canonical)",
+  "Not found (404)": "Niet gevonden (404)",
+  "Soft 404": "Soft 404",
+  "Server error (5xx)": "Serverfout (5xx)",
+};
+
 export function UrlTable({ urls, total, page, pageSize }: Props) {
   const router = useRouter();
   const pathname = usePathname();
@@ -99,6 +126,7 @@ export function UrlTable({ urls, total, page, pageSize }: Props) {
               <th className="px-4 py-3 font-medium">Status</th>
               <th className="px-4 py-3 font-medium">Coverage</th>
               <th className="px-4 py-3 font-medium">Laatst gecheckt</th>
+              <th className="px-4 py-3 font-medium">Laatst gepusht</th>
               <th className="px-4 py-3 font-medium">Pushes</th>
             </tr>
           </thead>
@@ -124,22 +152,29 @@ export function UrlTable({ urls, total, page, pageSize }: Props) {
                 <td className="px-4 py-3">
                   <VerdictBadge verdict={row.verdict} />
                 </td>
-                <td className="px-4 py-3 text-xs text-slate-500">
-                  {row.coverage_state ?? "-"}
+                <td className="px-4 py-3 text-xs text-slate-500" title={row.coverage_state ?? undefined}>
+                  {row.coverage_state
+                    ? (COVERAGE_LABELS[row.coverage_state] ?? row.coverage_state)
+                    : "-"}
                 </td>
                 <td className="px-4 py-3 text-xs text-slate-400">
                   {row.last_inspected
                     ? new Date(row.last_inspected).toLocaleDateString("nl-NL")
                     : "-"}
                 </td>
-                <td className="px-4 py-3 text-center text-slate-500">
-                  {row.push_count}
+                <td className="px-4 py-3 text-xs text-slate-400">
+                  {row.last_pushed
+                    ? new Date(row.last_pushed).toLocaleDateString("nl-NL")
+                    : "-"}
+                </td>
+                <td className="px-4 py-3 text-center">
+                  <PushCountBadge count={row.push_count} />
                 </td>
               </tr>
             ))}
             {urls.length === 0 && (
               <tr>
-                <td colSpan={6} className="px-4 py-8 text-center text-slate-400">
+                <td colSpan={7} className="px-4 py-8 text-center text-slate-400">
                   Geen URLs gevonden.
                 </td>
               </tr>
