@@ -34,7 +34,7 @@ export function PushStats({ usage, dailyLimit = 200 }: Props) {
     {
       label: "Inspections vandaag",
       value: usage.inspection_today.toLocaleString("nl-NL"),
-      color: "text-blue-600",
+      color: "text-[#f68d2e]",
     },
     {
       label: "Pushes deze week",

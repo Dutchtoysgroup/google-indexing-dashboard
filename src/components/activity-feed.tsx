@@ -19,7 +19,7 @@ function ApiTypeBadge({ type }: { type: string }) {
     );
   }
   return (
-    <span className="inline-flex items-center rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-700">
+    <span className="inline-flex items-center rounded-full bg-orange-100 px-2 py-0.5 text-xs font-medium text-orange-700">
       Inspection
     </span>
   );
@@ -38,26 +38,24 @@ export function ActivityFeed({ entries }: Props) {
   return (
     <div className="rounded-xl border border-exit-border bg-white p-6 shadow-sm">
       <h3 className="mb-4 text-lg font-semibold text-foreground">Recente activiteit</h3>
-      <div className="max-h-[380px] space-y-2 overflow-y-auto scrollbar-thin pr-1">
+      <div className="max-h-[380px] space-y-1.5 overflow-y-auto scrollbar-thin pr-1">
         {entries.map((entry) => {
           const info = SHOP_INFO[entry.shop_id];
           return (
             <div
               key={entry.id}
-              className="flex items-center justify-between rounded-lg border border-exit-border/50 px-3 py-2 transition-colors duration-150 hover:bg-exit-green-50"
+              className="flex items-center gap-2 rounded-lg border border-exit-border/50 px-3 py-2 transition-colors duration-150 hover:bg-exit-green-50"
             >
-              <div className="flex items-center gap-3">
-                <span className="text-sm text-slate-400 tabular-nums w-14">
-                  {formatDate(entry.date)}
-                </span>
-                <span className="text-base">{info?.flag ?? "🌍"}</span>
-                <span className="text-sm font-medium text-slate-700">
-                  {info?.name ?? entry.shop_id}
-                </span>
-                <ApiTypeBadge type={entry.api_type} />
-              </div>
-              <span className="text-sm font-semibold text-foreground">
-                {entry.url_count} URL{entry.url_count !== 1 ? "s" : ""}
+              <span className="shrink-0 text-xs text-slate-400 tabular-nums">
+                {formatDate(entry.date)}
+              </span>
+              <span className="shrink-0 text-sm">{info?.flag ?? "🌍"}</span>
+              <span className="min-w-0 truncate text-sm font-medium text-slate-700">
+                {info?.name ?? entry.shop_id}
+              </span>
+              <ApiTypeBadge type={entry.api_type} />
+              <span className="ml-auto shrink-0 text-sm font-semibold tabular-nums text-foreground">
+                {entry.url_count}
               </span>
             </div>
           );

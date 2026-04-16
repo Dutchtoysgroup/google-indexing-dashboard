@@ -53,7 +53,7 @@ export function ActivityChart({ data, title = "API Activiteit (30 dagen)" }: Pro
           />
           <Legend />
           <Bar dataKey="Pushes" stackId="a" fill="#6B8E23" radius={[0, 0, 0, 0]} />
-          <Bar dataKey="Inspections" stackId="a" fill="#2563eb" radius={[4, 4, 0, 0]} />
+          <Bar dataKey="Inspections" stackId="a" fill="#f68d2e" radius={[4, 4, 0, 0]} />
         </BarChart>
       </ResponsiveContainer>
     </div>
