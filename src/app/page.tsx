@@ -87,7 +87,7 @@ export default async function HomePage() {
   return (
     <div className="space-y-8">
       {/* Section 1: Overview stats */}
-      <StatsOverview shops={shops} />
+      <StatsOverview shops={shops} snapshots={snapshots} />
 
       {/* Section 2: Trend + Coverage donut */}
       <FadeInUp delay={0.1}>

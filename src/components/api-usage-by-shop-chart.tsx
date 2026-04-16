@@ -30,7 +30,8 @@ export function ApiUsageByShopChart({ data }: Props) {
   const chartData = data.map((d) => {
     const info = SHOP_INFO[d.shop_id];
     return {
-      shop: info ? `${info.flag} ${info.name}` : d.shop_id,
+      shop: info ? info.name : d.shop_id,
+      flag: info?.flag ?? "🌍",
       Pushes: d.pushes,
       Inspections: d.inspections,
     };
@@ -43,15 +44,21 @@ export function ApiUsageByShopChart({ data }: Props) {
         <BarChart data={chartData}>
           <CartesianGrid strokeDasharray="3 3" stroke="#E2E8D4" />
           <XAxis
-            dataKey="shop"
-            tick={{ fontSize: 10 }}
+            dataKey="flag"
+            tick={{ fontSize: 14 }}
             stroke="#94a3b8"
-            angle={-45}
-            textAnchor="end"
-            height={80}
+            interval={0}
+            height={30}
           />
           <YAxis tick={{ fontSize: 11 }} stroke="#94a3b8" />
           <Tooltip
+            labelFormatter={(_, payload) => {
+              if (payload && payload.length > 0) {
+                const item = payload[0].payload;
+                return `${item.flag} ${item.shop}`;
+              }
+              return "";
+            }}
             contentStyle={{
               borderRadius: "8px",
               border: "1px solid #E2E8D4",
