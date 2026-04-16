@@ -13,7 +13,9 @@ export function NavTabs() {
   const pathname = usePathname();
 
   return (
-    <nav className="flex items-center gap-1">
+    <nav
+      className="-mx-1 flex items-center gap-1 overflow-x-auto scrollbar-none sm:mx-0 sm:overflow-visible"
+    >
       {tabs.map((tab) => {
         const isActive =
           tab.href === "/"
@@ -24,7 +26,7 @@ export function NavTabs() {
           <Link
             key={tab.href}
             href={tab.href}
-            className={`rounded-lg px-4 py-2 text-sm font-medium transition-colors duration-200 ${
+            className={`shrink-0 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors duration-200 sm:px-4 sm:py-2 ${
               isActive
                 ? "bg-white/15 text-white"
                 : "text-white/60 hover:text-white hover:bg-white/10"

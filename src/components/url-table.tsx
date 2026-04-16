@@ -87,37 +87,89 @@ export function UrlTable({ urls, total, page, pageSize }: Props) {
 
   return (
     <div className="rounded-xl border border-exit-border bg-white shadow-sm">
-      <div className="flex flex-wrap items-center gap-3 border-b border-exit-border p-4">
+      <div className="flex flex-col gap-3 border-b border-exit-border p-4 sm:flex-row sm:flex-wrap sm:items-center">
         <h3 className="font-semibold text-foreground">
           URLs ({total.toLocaleString("nl-NL")})
         </h3>
 
-        <select
-          value={currentType}
-          onChange={(e) => setFilter("type", e.target.value)}
-          className="rounded-lg border border-exit-border px-3 py-1.5 text-sm focus:border-exit-green focus:outline-none focus:ring-1 focus:ring-exit-green"
-        >
-          <option value="">Alle types</option>
-          <option value="product">Product</option>
-          <option value="collection">Collection</option>
-          <option value="page">Page</option>
-          <option value="blog">Blog</option>
-          <option value="faq">FAQ</option>
-        </select>
+        <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-3">
+          <select
+            value={currentType}
+            onChange={(e) => setFilter("type", e.target.value)}
+            className="w-full rounded-lg border border-exit-border px-3 py-2 text-sm focus:border-exit-green focus:outline-none focus:ring-1 focus:ring-exit-green sm:w-auto sm:py-1.5"
+          >
+            <option value="">Alle types</option>
+            <option value="product">Product</option>
+            <option value="collection">Collection</option>
+            <option value="page">Page</option>
+            <option value="blog">Blog</option>
+            <option value="faq">FAQ</option>
+          </select>
 
-        <select
-          value={currentVerdict}
-          onChange={(e) => setFilter("verdict", e.target.value)}
-          className="rounded-lg border border-exit-border px-3 py-1.5 text-sm focus:border-exit-green focus:outline-none focus:ring-1 focus:ring-exit-green"
-        >
-          <option value="">Alle statussen</option>
-          <option value="PASS">Geindexeerd</option>
-          <option value="FAIL">Niet geindexeerd</option>
-          <option value="UNKNOWN">Niet gecheckt</option>
-        </select>
+          <select
+            value={currentVerdict}
+            onChange={(e) => setFilter("verdict", e.target.value)}
+            className="w-full rounded-lg border border-exit-border px-3 py-2 text-sm focus:border-exit-green focus:outline-none focus:ring-1 focus:ring-exit-green sm:w-auto sm:py-1.5"
+          >
+            <option value="">Alle statussen</option>
+            <option value="PASS">Geindexeerd</option>
+            <option value="FAIL">Niet geindexeerd</option>
+            <option value="UNKNOWN">Niet gecheckt</option>
+          </select>
+        </div>
       </div>
 
-      <div className="overflow-x-auto">
+      {/* Mobile: card list */}
+      <ul className="divide-y divide-exit-border/40 sm:hidden">
+        {urls.map((row) => (
+          <li key={row.id} className="p-4">
+            <div className="flex items-start justify-between gap-3">
+              <a
+                href={row.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="min-w-0 flex-1 break-all text-sm text-exit-green hover:underline"
+              >
+                {row.url.replace(/^https?:\/\/www\./, "")}
+              </a>
+              <VerdictBadge verdict={row.verdict} />
+            </div>
+            <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-500">
+              {row.url_type && (
+                <span className="capitalize">{row.url_type}</span>
+              )}
+              {row.coverage_state && (
+                <span className="text-slate-500">
+                  {COVERAGE_LABELS[row.coverage_state] ?? row.coverage_state}
+                </span>
+              )}
+              {row.last_inspected && (
+                <span className="text-slate-400">
+                  gecheckt{" "}
+                  {new Date(row.last_inspected).toLocaleDateString("nl-NL")}
+                </span>
+              )}
+              {row.last_pushed && (
+                <span className="text-slate-400">
+                  gepusht{" "}
+                  {new Date(row.last_pushed).toLocaleDateString("nl-NL")}
+                </span>
+              )}
+              {row.push_count > 0 && (
+                <PushCountBadge count={row.push_count} />
+              )}
+            </div>
+          </li>
+        ))}
+        {urls.length === 0 && (
+          <li className="px-4 py-8 text-center text-sm text-slate-400">
+            Geen URLs gevonden.
+          </li>
+        )}
+      </ul>
+
+      {/* Desktop: table */}
+      <div className="hidden overflow-x-auto sm:block">
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-exit-border/50 text-left text-xs text-slate-500">
@@ -186,7 +238,7 @@ export function UrlTable({ urls, total, page, pageSize }: Props) {
       {/* Pagination */}
       {totalPages > 1 && (
         <div className="flex items-center justify-between border-t border-exit-border px-4 py-3">
-          <p className="text-sm text-slate-500">
+          <p className="text-xs text-slate-500 sm:text-sm">
             Pagina {page} van {totalPages}
           </p>
           <div className="flex gap-2">
