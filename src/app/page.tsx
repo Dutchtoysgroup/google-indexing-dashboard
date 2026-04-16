@@ -113,7 +113,7 @@ export default async function HomePage() {
         <div className="space-y-4">
           <h2 className="text-lg font-semibold text-foreground">API Activiteit</h2>
           <PushStats usage={todayUsage} />
-          <div className="grid gap-6 lg:grid-cols-3">
+          <div className="grid items-start gap-6 lg:grid-cols-3">
             <ActivityChart data={apiDailySummary} />
             <ApiUsageByShopChart data={apiUsageByShop} />
             <ActivityFeed entries={recentActivity.slice(0, 30)} />
