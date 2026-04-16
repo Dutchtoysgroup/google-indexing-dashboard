@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Link from "next/link";
+import Image from "next/image";
+import { NavTabs } from "@/components/nav-tabs";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -28,20 +30,25 @@ export default function RootLayout({
       lang="nl"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full bg-slate-50 font-sans">
-        <header className="border-b border-slate-200 bg-white">
-          <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+      <body className="min-h-full bg-background font-sans">
+        <header className="bg-exit-header">
+          <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-3">
             <Link href="/" className="flex items-center gap-3">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-900 text-sm font-bold text-white">
-                E
-              </div>
+              <Image
+                src="/exit-logo.svg"
+                alt="EXIT Toys"
+                width={48}
+                height={34}
+                className="h-[34px] w-auto"
+              />
               <div>
-                <h1 className="text-lg font-semibold text-slate-900">
+                <h1 className="text-lg font-semibold text-white">
                   Indexing Dashboard
                 </h1>
-                <p className="text-xs text-slate-400">EXIT Toys</p>
+                <p className="text-xs text-white/50">Google Search Console</p>
               </div>
             </Link>
+            <NavTabs />
           </div>
         </header>
         <main className="mx-auto max-w-7xl px-6 py-8">{children}</main>

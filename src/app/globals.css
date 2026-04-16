@@ -1,20 +1,40 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f8fafc;
-  --foreground: #0f172a;
+  /* EXIT Toys brand */
+  --exit-green: #6B8E23;
+  --exit-green-light: #8AAD3A;
+  --exit-green-dark: #4A6318;
+  --exit-green-50: #F4F7EC;
+  --exit-green-100: #E3ECCC;
+  --exit-green-200: #C8D99A;
+
+  /* Surfaces */
+  --background: #F8FAF5;
+  --foreground: #1a2e05;
   --card: #ffffff;
-  --border: #e2e8f0;
+  --border: #E2E8D4;
   --muted: #64748b;
+  --header-bg: #1A2E05;
+
+  /* Semantic */
   --green: #22c55e;
   --red: #ef4444;
   --yellow: #eab308;
-  --blue: #3b82f6;
+  --blue: #2563eb;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-exit-green: var(--exit-green);
+  --color-exit-green-light: var(--exit-green-light);
+  --color-exit-green-dark: var(--exit-green-dark);
+  --color-exit-green-50: var(--exit-green-50);
+  --color-exit-green-100: var(--exit-green-100);
+  --color-exit-green-200: var(--exit-green-200);
+  --color-exit-border: var(--border);
+  --color-exit-header: var(--header-bg);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
@@ -22,4 +42,16 @@
 body {
   background: var(--background);
   color: var(--foreground);
+}
+
+/* Custom scrollbar for activity feed */
+.scrollbar-thin::-webkit-scrollbar {
+  width: 4px;
+}
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: var(--exit-green-200);
+  border-radius: 2px;
 }

@@ -224,6 +224,48 @@ export async function getShopExtraStats(shopId: string): Promise<ShopExtraStats>
   return (rows[0] as ShopExtraStats) ?? { total_pushes: 0, never_pushed: 0, never_inspected: 0, last_pushed: null, last_inspected: null };
 }
 
+// ─── New queries for dashboard charts ─────────────────────────
+
+export type CoverageStateEntry = {
+  coverage_state: string;
+  count: number;
+};
+
+export type ApiUsageByShop = {
+  shop_id: string;
+  pushes: number;
+  inspections: number;
+};
+
+export async function getCoverageStateBreakdown(): Promise<CoverageStateEntry[]> {
+  const sql = getDb();
+  const rows = await sql`
+    SELECT
+      COALESCE(coverage_state, 'Onbekend') as coverage_state,
+      COUNT(*)::int as count
+    FROM urls
+    WHERE verdict IS NOT NULL AND verdict != 'PASS' AND removed_from_sitemap = FALSE
+    GROUP BY coverage_state
+    ORDER BY count DESC
+  `;
+  return rows as CoverageStateEntry[];
+}
+
+export async function getApiUsageByShop(days: number = 30): Promise<ApiUsageByShop[]> {
+  const sql = getDb();
+  const rows = await sql`
+    SELECT
+      shop_id,
+      COALESCE(SUM(url_count) FILTER (WHERE api_type = 'indexing'), 0)::int as pushes,
+      COALESCE(SUM(url_count) FILTER (WHERE api_type = 'inspection'), 0)::int as inspections
+    FROM api_log
+    WHERE date >= CURRENT_DATE - make_interval(days => ${days})
+    GROUP BY shop_id
+    ORDER BY pushes DESC
+  `;
+  return rows as ApiUsageByShop[];
+}
+
 export async function getShopUrls(
   shopId: string,
   filters: {

@@ -34,9 +34,9 @@ function VerdictBadge({ verdict }: { verdict: string | null }) {
 
 function PushCountBadge({ count }: { count: number }) {
   if (count === 0) return <span className="text-slate-300">-</span>;
-  let bg = "bg-purple-100 text-purple-700";
+  let bg = "bg-exit-green-100 text-exit-green-dark";
   if (count >= 5) bg = "bg-orange-100 text-orange-700";
-  else if (count >= 3) bg = "bg-purple-200 text-purple-800";
+  else if (count >= 3) bg = "bg-exit-green-200 text-exit-green-dark";
   return (
     <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${bg}`}>
       {count}x
@@ -86,16 +86,16 @@ export function UrlTable({ urls, total, page, pageSize }: Props) {
   const currentVerdict = searchParams.get("verdict") ?? "";
 
   return (
-    <div className="rounded-xl border border-slate-200 bg-white shadow-sm">
-      <div className="flex flex-wrap items-center gap-3 border-b border-slate-200 p-4">
-        <h3 className="font-semibold text-slate-900">
+    <div className="rounded-xl border border-exit-border bg-white shadow-sm">
+      <div className="flex flex-wrap items-center gap-3 border-b border-exit-border p-4">
+        <h3 className="font-semibold text-foreground">
           URLs ({total.toLocaleString("nl-NL")})
         </h3>
 
         <select
           value={currentType}
           onChange={(e) => setFilter("type", e.target.value)}
-          className="rounded-lg border border-slate-200 px-3 py-1.5 text-sm"
+          className="rounded-lg border border-exit-border px-3 py-1.5 text-sm focus:border-exit-green focus:outline-none focus:ring-1 focus:ring-exit-green"
         >
           <option value="">Alle types</option>
           <option value="product">Product</option>
@@ -108,7 +108,7 @@ export function UrlTable({ urls, total, page, pageSize }: Props) {
         <select
           value={currentVerdict}
           onChange={(e) => setFilter("verdict", e.target.value)}
-          className="rounded-lg border border-slate-200 px-3 py-1.5 text-sm"
+          className="rounded-lg border border-exit-border px-3 py-1.5 text-sm focus:border-exit-green focus:outline-none focus:ring-1 focus:ring-exit-green"
         >
           <option value="">Alle statussen</option>
           <option value="PASS">Geindexeerd</option>
@@ -120,7 +120,7 @@ export function UrlTable({ urls, total, page, pageSize }: Props) {
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-slate-100 text-left text-xs text-slate-500">
+            <tr className="border-b border-exit-border/50 text-left text-xs text-slate-500">
               <th className="px-4 py-3 font-medium">URL</th>
               <th className="px-4 py-3 font-medium">Type</th>
               <th className="px-4 py-3 font-medium">Status</th>
@@ -134,14 +134,14 @@ export function UrlTable({ urls, total, page, pageSize }: Props) {
             {urls.map((row) => (
               <tr
                 key={row.id}
-                className="border-b border-slate-50 hover:bg-slate-50"
+                className="border-b border-exit-border/30 transition-colors hover:bg-exit-green-50"
               >
                 <td className="max-w-md truncate px-4 py-3">
                   <a
                     href={row.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-blue-600 hover:underline"
+                    className="text-exit-green hover:underline"
                   >
                     {row.url.replace(/^https?:\/\/www\./, "")}
                   </a>
@@ -185,7 +185,7 @@ export function UrlTable({ urls, total, page, pageSize }: Props) {
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="flex items-center justify-between border-t border-slate-200 px-4 py-3">
+        <div className="flex items-center justify-between border-t border-exit-border px-4 py-3">
           <p className="text-sm text-slate-500">
             Pagina {page} van {totalPages}
           </p>
@@ -193,14 +193,14 @@ export function UrlTable({ urls, total, page, pageSize }: Props) {
             <button
               onClick={() => setPage(page - 1)}
               disabled={page <= 1}
-              className="rounded-lg border border-slate-200 px-3 py-1.5 text-sm disabled:opacity-40"
+              className="rounded-lg border border-exit-border px-3 py-1.5 text-sm transition-colors hover:border-exit-green-200 disabled:opacity-40"
             >
               Vorige
             </button>
             <button
               onClick={() => setPage(page + 1)}
               disabled={page >= totalPages}
-              className="rounded-lg border border-slate-200 px-3 py-1.5 text-sm disabled:opacity-40"
+              className="rounded-lg border border-exit-border px-3 py-1.5 text-sm transition-colors hover:border-exit-green-200 disabled:opacity-40"
             >
               Volgende
             </button>

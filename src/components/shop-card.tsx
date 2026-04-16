@@ -21,25 +21,25 @@ export function ShopCard({ shop }: Props) {
   return (
     <Link
       href={`/shop/${shop.shop_id}`}
-      className="block rounded-xl border border-slate-200 bg-white p-5 shadow-sm transition-shadow hover:shadow-md"
+      className="block rounded-xl border border-exit-border bg-white p-5 shadow-sm transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 hover:border-exit-green-200"
     >
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <span className="text-xl">{info?.flag ?? "🌍"}</span>
           <div>
-            <h3 className="font-semibold text-slate-900">
+            <h3 className="font-semibold text-foreground">
               {info?.name ?? shop.shop_id}
             </h3>
             <p className="text-xs text-slate-400">{info?.domain ?? ""}</p>
           </div>
         </div>
-        <span className="text-lg font-bold text-slate-900">{coverage}%</span>
+        <span className="text-lg font-bold text-foreground">{coverage}%</span>
       </div>
 
       {/* Progress bar */}
-      <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-slate-100">
+      <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-exit-green-50">
         <div
-          className={`h-full rounded-full ${barColor} transition-all`}
+          className={`h-full rounded-full ${barColor} transition-all duration-700`}
           style={{ width: `${coverage}%` }}
         />
       </div>

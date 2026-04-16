@@ -30,8 +30,8 @@ export function TrendChart({ data, title = "Indexering trend" }: Props) {
 
   if (chartData.length === 0) {
     return (
-      <div className="rounded-xl border border-slate-200 bg-white p-6">
-        <h3 className="mb-4 text-lg font-semibold text-slate-900">{title}</h3>
+      <div className="rounded-xl border border-exit-border bg-white p-6 shadow-sm">
+        <h3 className="mb-4 text-lg font-semibold text-foreground">{title}</h3>
         <p className="text-sm text-slate-400">
           Nog geen trend data beschikbaar. Data verschijnt na de eerste scan.
         </p>
@@ -40,17 +40,17 @@ export function TrendChart({ data, title = "Indexering trend" }: Props) {
   }
 
   return (
-    <div className="rounded-xl border border-slate-200 bg-white p-6">
-      <h3 className="mb-4 text-lg font-semibold text-slate-900">{title}</h3>
+    <div className="rounded-xl border border-exit-border bg-white p-6 shadow-sm">
+      <h3 className="mb-4 text-lg font-semibold text-foreground">{title}</h3>
       <ResponsiveContainer width="100%" height={300}>
         <AreaChart data={chartData}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+          <CartesianGrid strokeDasharray="3 3" stroke="#E2E8D4" />
           <XAxis dataKey="date" tick={{ fontSize: 12 }} stroke="#94a3b8" />
           <YAxis tick={{ fontSize: 12 }} stroke="#94a3b8" />
           <Tooltip
             contentStyle={{
               borderRadius: "8px",
-              border: "1px solid #e2e8f0",
+              border: "1px solid #E2E8D4",
               fontSize: "13px",
             }}
           />

@@ -76,14 +76,14 @@ export default async function ShopPage({ params, searchParams }: Props) {
       <div className="flex items-center gap-4">
         <Link
           href="/"
-          className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 text-slate-400 hover:text-slate-600"
+          className="flex h-8 w-8 items-center justify-center rounded-lg border border-exit-border text-slate-400 transition-colors hover:text-exit-green hover:border-exit-green-200"
         >
           &larr;
         </Link>
         <div>
           <div className="flex items-center gap-2">
             <span className="text-2xl">{info?.flag ?? "🌍"}</span>
-            <h2 className="text-xl font-semibold text-slate-900">
+            <h2 className="text-xl font-semibold text-foreground">
               {info?.name ?? shopId}
             </h2>
           </div>
@@ -94,15 +94,15 @@ export default async function ShopPage({ params, searchParams }: Props) {
       {/* Indexering Stats */}
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-5">
         {[
-          { label: "Totaal", value: summary.total_urls, color: "text-slate-900" },
+          { label: "Totaal", value: summary.total_urls, color: "text-foreground" },
           { label: "Geindexeerd", value: summary.indexed, color: "text-green-600" },
           { label: "Niet geindexeerd", value: summary.not_indexed, color: "text-red-500" },
           { label: "Niet gecheckt", value: summary.not_checked, color: "text-yellow-600" },
-          { label: "Coverage", value: `${coverage}%`, color: "text-blue-600" },
+          { label: "Coverage", value: `${coverage}%`, color: "text-exit-green" },
         ].map((s) => (
           <div
             key={s.label}
-            className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm"
+            className="rounded-xl border border-exit-border bg-white p-4 shadow-sm"
           >
             <p className="text-sm text-slate-500">{s.label}</p>
             <p className={`mt-1 text-2xl font-semibold ${s.color}`}>
@@ -116,10 +116,10 @@ export default async function ShopPage({ params, searchParams }: Props) {
 
       {/* Push Activiteit Stats */}
       <div>
-        <h3 className="mb-3 text-base font-semibold text-slate-900">Push activiteit</h3>
+        <h3 className="mb-3 text-base font-semibold text-foreground">Push activiteit</h3>
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-5">
           {[
-            { label: "Totale pushes", value: extraStats.total_pushes, color: "text-purple-600" },
+            { label: "Totale pushes", value: extraStats.total_pushes, color: "text-exit-green" },
             { label: "Nooit gepusht", value: extraStats.never_pushed, color: "text-orange-500" },
             { label: "Nooit gecheckt", value: extraStats.never_inspected, color: "text-yellow-600" },
             { label: "Laatst gepusht", value: formatDateTime(extraStats.last_pushed), color: "text-slate-700", isText: true },
@@ -127,7 +127,7 @@ export default async function ShopPage({ params, searchParams }: Props) {
           ].map((s) => (
             <div
               key={s.label}
-              className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm"
+              className="rounded-xl border border-exit-border bg-white p-4 shadow-sm"
             >
               <p className="text-sm text-slate-500">{s.label}</p>
               <p className={`mt-1 font-semibold ${s.color} ${"isText" in s && s.isText ? "text-sm" : "text-2xl"}`}>
@@ -151,14 +151,14 @@ export default async function ShopPage({ params, searchParams }: Props) {
 
       {/* Recent Pushed URLs */}
       {recentPushes.length > 0 && (
-        <div className="rounded-xl border border-slate-200 bg-white shadow-sm">
-          <div className="border-b border-slate-200 p-4">
-            <h3 className="font-semibold text-slate-900">Recent gepushte URLs</h3>
+        <div className="rounded-xl border border-exit-border bg-white shadow-sm">
+          <div className="border-b border-exit-border p-4">
+            <h3 className="font-semibold text-foreground">Recent gepushte URLs</h3>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-slate-100 text-left text-xs text-slate-500">
+                <tr className="border-b border-exit-border/50 text-left text-xs text-slate-500">
                   <th className="px-4 py-3 font-medium">URL</th>
                   <th className="px-4 py-3 font-medium">Type</th>
                   <th className="px-4 py-3 font-medium">Status</th>
@@ -168,13 +168,13 @@ export default async function ShopPage({ params, searchParams }: Props) {
               </thead>
               <tbody>
                 {recentPushes.map((row) => (
-                  <tr key={row.id} className="border-b border-slate-50 hover:bg-slate-50">
+                  <tr key={row.id} className="border-b border-exit-border/30 hover:bg-exit-green-50 transition-colors">
                     <td className="max-w-md truncate px-4 py-3">
                       <a
                         href={row.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-blue-600 hover:underline"
+                        className="text-exit-green hover:underline"
                       >
                         {row.url.replace(/^https?:\/\/www\./, "")}
                       </a>
@@ -193,7 +193,7 @@ export default async function ShopPage({ params, searchParams }: Props) {
                       {formatDateTime(row.last_pushed)}
                     </td>
                     <td className="px-4 py-3 text-center">
-                      <span className="inline-flex items-center rounded-full bg-purple-100 px-2 py-0.5 text-xs font-medium text-purple-700">
+                      <span className="inline-flex items-center rounded-full bg-exit-green-100 px-2 py-0.5 text-xs font-medium text-exit-green-dark">
                         {row.push_count}x
                       </span>
                     </td>

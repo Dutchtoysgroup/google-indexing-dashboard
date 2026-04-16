@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 140" width="200" height="140">
+  <path d="M100,5 C140,2 175,15 188,45 C200,75 195,110 170,125 C145,138 115,140 85,138 C55,135 25,125 12,100 C0,75 5,40 30,20 C50,5 75,7 100,5Z" fill="#6B8E23"/>
+  <text x="100" y="72" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-weight="900" font-size="48" fill="white" letter-spacing="-1">EXIT</text>
+  <text x="100" y="108" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-weight="900" font-size="32" fill="white" letter-spacing="2">TOYS</text>
+</svg>
