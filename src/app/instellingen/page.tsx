@@ -1,5 +1,6 @@
 import { listSchedules, recentLog } from "@/lib/email/schedules";
 import { listAllSubscribers } from "@/lib/email/subscribers";
+import { getLatestRun, type WorkflowRun } from "@/lib/github-trigger";
 import { ScheduleManager } from "@/components/schedule-manager";
 import { SubscribersManager } from "@/components/subscribers-manager";
 import { QuickTrigger } from "@/components/quick-trigger";
@@ -27,6 +28,18 @@ export default async function InstellingenPage() {
   }
 
   const activeSubscriberCount = subscribers.filter((s) => !s.unsubscribed_at).length;
+
+  // GitHub trigger state (non-fatal: if PAT ontbreekt, renderen we een config-card)
+  const githubConfigured = Boolean(process.env.GITHUB_PAT);
+  let initialRun: WorkflowRun | null = null;
+  let triggerError: string | null = null;
+  if (githubConfigured) {
+    try {
+      initialRun = await getLatestRun();
+    } catch (e) {
+      triggerError = e instanceof Error ? e.message : String(e);
+    }
+  }
 
   return (
     <div className="space-y-10">
@@ -65,7 +78,11 @@ export default async function InstellingenPage() {
           </p>
         </div>
 
-        <QuickTrigger />
+        <QuickTrigger
+          initialRun={initialRun}
+          initialError={triggerError}
+          configured={githubConfigured}
+        />
       </section>
     </div>
   );
