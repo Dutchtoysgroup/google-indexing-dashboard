@@ -15,12 +15,12 @@ const PRESETS: Array<{ label: string; days: number[] }> = [
 type Props = {
   initialSchedules: EmailSchedule[];
   initialLog: EmailLogEntry[];
-  recipient: string | null;
+  activeSubscriberCount: number;
 };
 
-export function ScheduleManager({ initialSchedules, initialLog, recipient }: Props) {
+export function ScheduleManager({ initialSchedules, initialLog, activeSubscriberCount }: Props) {
   const [schedules, setSchedules] = useState(initialSchedules);
-  const [log, setLog] = useState(initialLog);
+  const [log] = useState(initialLog);
   const [testStatus, setTestStatus] = useState<{ ok: boolean; msg: string } | null>(null);
   const [pending, startTransition] = useTransition();
 
@@ -84,33 +84,35 @@ export function ScheduleManager({ initialSchedules, initialLog, recipient }: Pro
       const r = await fetch("/api/email/test", { method: "POST" });
       const j = await r.json().catch(() => ({}));
       if (r.ok) {
-        setTestStatus({ ok: true, msg: `Verzonden naar ${j.recipient}` });
+        const count = j.recipientCount ?? 0;
+        setTestStatus({
+          ok: true,
+          msg: count === 1
+            ? `Verzonden naar 1 abonnee.`
+            : `Verzonden naar ${count} abonnees.`,
+        });
       } else {
         setTestStatus({ ok: false, msg: j.error || "Onbekende fout" });
       }
-      // Refresh log
-      const lr = await fetch("/api/email/schedules");
-      if (lr.ok) {
-        // log endpoint hergebruiken via dedicated query - we hebben er geen, dus reload
-        setTimeout(() => location.reload(), 800);
-      }
+      // Reload to refresh log
+      setTimeout(() => location.reload(), 800);
     });
   }
 
   return (
     <div className="space-y-6">
-      {/* Recipient + test sectie */}
+      {/* Testmail sectie */}
       <section className="rounded-xl border border-exit-border bg-card p-5 shadow-sm">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <p className="text-sm text-muted">Ontvanger (uit env var EMAIL_TO)</p>
-            <p className="mt-0.5 font-mono text-sm text-foreground">
-              {recipient ?? <span className="text-red-500">⚠ Niet ingesteld</span>}
+            <p className="text-sm font-medium text-foreground">Testmail</p>
+            <p className="mt-0.5 text-xs text-muted">
+              Stuurt nu een rapport-mail naar alle {activeSubscriberCount} actieve abonnee{activeSubscriberCount === 1 ? "" : "s"}.
             </p>
           </div>
           <button
             onClick={sendTest}
-            disabled={pending || !recipient}
+            disabled={pending || activeSubscriberCount === 0}
             className="rounded-lg bg-exit-green px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-exit-green-dark disabled:cursor-not-allowed disabled:opacity-50"
           >
             {pending ? "Versturen…" : "Verstuur testmail nu"}

@@ -17,7 +17,7 @@ import { render } from "@react-email/render";
 import { SHOP_INFO } from "@/lib/shops";
 import type { Report } from "./report-data";
 
-// EXIT brand kleuren - hardcoded omdat e-mailclients geen CSS-variabelen ondersteunen
+// Light palette (default). Dark-mode overrides zijn via @media in <Head>.
 const c = {
   headerBg: "#1A2E05",
   primary: "#6B8E23",
@@ -33,6 +33,40 @@ const c = {
   red: "#ef4444",
   yellow: "#eab308",
 };
+
+// Dark-mode CSS. Wordt toegepast door Apple Mail, iOS Mail en Outlook.com
+// wanneer het systeem / account op dark mode staat. Gmail strip dit; daar
+// blijft de light-versie zichtbaar (wat prima leesbaar is).
+const DARK_STYLES = `
+  :root { color-scheme: light dark; supported-color-schemes: light dark; }
+  @media (prefers-color-scheme: dark) {
+    body, .email-body { background-color: #0F1608 !important; }
+    .email-card { background-color: #1A2410 !important; border-color: #2A3A18 !important; }
+    .email-header { background-color: #0B1005 !important; }
+    .email-footer { background-color: #14200A !important; border-color: #2A3A18 !important; }
+    .email-text { color: #E8EECC !important; }
+    .email-heading { color: #E8EECC !important; }
+    .email-muted { color: #9AA89A !important; }
+    .email-border-bottom { border-color: #2A3A18 !important; }
+    .email-row-border { border-color: #223016 !important; }
+    .email-stat-card { background-color: #223016 !important; border-color: #34471F !important; }
+    .email-stat-value { color: #C8D99A !important; }
+    .email-link { color: #A8C85A !important; }
+  }
+  /* Outlook.com dark-mode prefix */
+  [data-ogsc] body, [data-ogsc] .email-body { background-color: #0F1608 !important; }
+  [data-ogsc] .email-card { background-color: #1A2410 !important; border-color: #2A3A18 !important; }
+  [data-ogsc] .email-header { background-color: #0B1005 !important; }
+  [data-ogsc] .email-footer { background-color: #14200A !important; border-color: #2A3A18 !important; }
+  [data-ogsc] .email-text { color: #E8EECC !important; }
+  [data-ogsc] .email-heading { color: #E8EECC !important; }
+  [data-ogsc] .email-muted { color: #9AA89A !important; }
+  [data-ogsc] .email-border-bottom { border-color: #2A3A18 !important; }
+  [data-ogsc] .email-row-border { border-color: #223016 !important; }
+  [data-ogsc] .email-stat-card { background-color: #223016 !important; border-color: #34471F !important; }
+  [data-ogsc] .email-stat-value { color: #C8D99A !important; }
+  [data-ogsc] .email-link { color: #A8C85A !important; }
+`;
 
 function fmt(n: number): string {
   return n.toLocaleString("nl-NL");
@@ -52,9 +86,17 @@ type TemplateProps = {
   report: Report;
   baseUrl: string;
   scheduleName?: string | null;
+  unsubscribeUrl?: string | null;
+  recipientEmail?: string | null;
 };
 
-export function EmailTemplate({ report, baseUrl, scheduleName }: TemplateProps) {
+export function EmailTemplate({
+  report,
+  baseUrl,
+  scheduleName,
+  unsubscribeUrl,
+  recipientEmail,
+}: TemplateProps) {
   const nlDate = new Date(report.generatedAt).toLocaleDateString("nl-NL", {
     weekday: "long",
     day: "numeric",
@@ -64,18 +106,33 @@ export function EmailTemplate({ report, baseUrl, scheduleName }: TemplateProps) 
 
   return (
     <Html lang="nl">
-      <Head />
+      <Head>
+        <meta name="color-scheme" content="light dark" />
+        <meta name="supported-color-schemes" content="light dark" />
+        <style dangerouslySetInnerHTML={{ __html: DARK_STYLES }} />
+      </Head>
       <Preview>
         Ochtendrapport indexing — {fmt(report.totals.inspections_since)} inspecties, {fmt(report.totals.pushes_since)} indexeringsverzoeken, {deltaLabel(report.totals.indexed_delta)} indexed
       </Preview>
-      <Body style={{ backgroundColor: c.background, margin: 0, padding: 0, fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" }}>
+      <Body
+        className="email-body"
+        style={{
+          backgroundColor: c.background,
+          margin: 0,
+          padding: 0,
+          fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
+        }}
+      >
         <Container style={{ maxWidth: "640px", margin: "0 auto", padding: "0" }}>
           {/* Header */}
-          <Section style={{ backgroundColor: c.headerBg, padding: "20px 24px", borderRadius: "8px 8px 0 0" }}>
+          <Section
+            className="email-header"
+            style={{ backgroundColor: c.headerBg, padding: "20px 24px", borderRadius: "8px 8px 0 0" }}
+          >
             <Row>
               <Column style={{ verticalAlign: "middle" }}>
                 <Img
-                  src={`${baseUrl}/exit-logo.webp`}
+                  src={`${baseUrl}/exit-logo-transparent.png`}
                   width="70"
                   height="52"
                   alt="EXIT Toys"
@@ -94,17 +151,23 @@ export function EmailTemplate({ report, baseUrl, scheduleName }: TemplateProps) 
           </Section>
 
           {/* Titel + intro */}
-          <Section style={{ backgroundColor: c.card, padding: "24px", borderLeft: `1px solid ${c.border}`, borderRight: `1px solid ${c.border}` }}>
-            <Heading as="h1" style={{ color: c.text, fontSize: "22px", fontWeight: 600, margin: "0 0 4px 0" }}>
+          <Section
+            className="email-card"
+            style={{ backgroundColor: c.card, padding: "24px", borderLeft: `1px solid ${c.border}`, borderRight: `1px solid ${c.border}` }}
+          >
+            <Heading as="h1" className="email-heading" style={{ color: c.text, fontSize: "22px", fontWeight: 600, margin: "0 0 4px 0" }}>
               Ochtendrapport — {nlDate}
             </Heading>
-            <Text style={{ color: c.muted, fontSize: "14px", margin: "0" }}>
+            <Text className="email-muted" style={{ color: c.muted, fontSize: "14px", margin: "0" }}>
               {scheduleName ? `${scheduleName} · ` : ""}Overzicht van de {report.humanSince}
             </Text>
           </Section>
 
           {/* Stat cards */}
-          <Section style={{ backgroundColor: c.card, padding: "0 24px 16px 24px", borderLeft: `1px solid ${c.border}`, borderRight: `1px solid ${c.border}` }}>
+          <Section
+            className="email-card"
+            style={{ backgroundColor: c.card, padding: "0 24px 16px 24px", borderLeft: `1px solid ${c.border}`, borderRight: `1px solid ${c.border}` }}
+          >
             <Row>
               <StatCard label="Inspecties" value={fmt(report.totals.inspections_since)} accent={c.primary} />
               <StatCard label="Indexeringsverzoeken" value={fmt(report.totals.pushes_since)} accent={c.primary} />
@@ -118,18 +181,21 @@ export function EmailTemplate({ report, baseUrl, scheduleName }: TemplateProps) 
           </Section>
 
           {/* Per shop tabel */}
-          <Section style={{ backgroundColor: c.card, padding: "8px 24px 24px 24px", borderLeft: `1px solid ${c.border}`, borderRight: `1px solid ${c.border}` }}>
-            <Heading as="h2" style={{ color: c.text, fontSize: "16px", fontWeight: 600, margin: "16px 0 12px 0" }}>
+          <Section
+            className="email-card"
+            style={{ backgroundColor: c.card, padding: "8px 24px 24px 24px", borderLeft: `1px solid ${c.border}`, borderRight: `1px solid ${c.border}` }}
+          >
+            <Heading as="h2" className="email-heading" style={{ color: c.text, fontSize: "16px", fontWeight: 600, margin: "16px 0 12px 0" }}>
               Per shop
             </Heading>
             <table width="100%" cellPadding={0} cellSpacing={0} style={{ borderCollapse: "collapse", fontSize: "13px" }}>
               <thead>
-                <tr style={{ borderBottom: `1px solid ${c.border}`, color: c.muted }}>
-                  <th style={{ textAlign: "left", padding: "8px 0", fontWeight: 500 }}>Shop</th>
-                  <th style={{ textAlign: "right", padding: "8px 0", fontWeight: 500 }}>Inspecties</th>
-                  <th style={{ textAlign: "right", padding: "8px 0", fontWeight: 500 }}>Verzoeken</th>
-                  <th style={{ textAlign: "right", padding: "8px 0", fontWeight: 500 }}>Δ indexed</th>
-                  <th style={{ textAlign: "right", padding: "8px 0", fontWeight: 500 }}>Coverage</th>
+                <tr className="email-border-bottom" style={{ borderBottom: `1px solid ${c.border}`, color: c.muted }}>
+                  <th className="email-muted" style={{ textAlign: "left", padding: "8px 0", fontWeight: 500 }}>Shop</th>
+                  <th className="email-muted" style={{ textAlign: "right", padding: "8px 0", fontWeight: 500 }}>Inspecties</th>
+                  <th className="email-muted" style={{ textAlign: "right", padding: "8px 0", fontWeight: 500 }}>Verzoeken</th>
+                  <th className="email-muted" style={{ textAlign: "right", padding: "8px 0", fontWeight: 500 }}>Δ indexed</th>
+                  <th className="email-muted" style={{ textAlign: "right", padding: "8px 0", fontWeight: 500 }}>Coverage</th>
                 </tr>
               </thead>
               <tbody>
@@ -137,14 +203,14 @@ export function EmailTemplate({ report, baseUrl, scheduleName }: TemplateProps) 
                   const info = SHOP_INFO[s.shop_id];
                   const cov = s.total_now > 0 ? ((s.indexed_now / s.total_now) * 100).toFixed(1) : "0.0";
                   return (
-                    <tr key={s.shop_id} style={{ borderBottom: `1px solid ${c.accent50}` }}>
-                      <td style={{ padding: "8px 0", color: c.text }}>
+                    <tr key={s.shop_id} className="email-row-border" style={{ borderBottom: `1px solid ${c.accent50}` }}>
+                      <td className="email-text" style={{ padding: "8px 0", color: c.text }}>
                         {info ? `${info.flag} ${info.name}` : s.shop_id}
                       </td>
-                      <td style={{ padding: "8px 0", textAlign: "right", color: c.text }}>{fmt(s.inspections_since)}</td>
-                      <td style={{ padding: "8px 0", textAlign: "right", color: c.text }}>{fmt(s.pushes_since)}</td>
+                      <td className="email-text" style={{ padding: "8px 0", textAlign: "right", color: c.text }}>{fmt(s.inspections_since)}</td>
+                      <td className="email-text" style={{ padding: "8px 0", textAlign: "right", color: c.text }}>{fmt(s.pushes_since)}</td>
                       <td style={{ padding: "8px 0", textAlign: "right", color: deltaColor(s.indexed_delta), fontWeight: 500 }}>{deltaLabel(s.indexed_delta)}</td>
-                      <td style={{ padding: "8px 0", textAlign: "right", color: c.muted }}>{cov}%</td>
+                      <td className="email-muted" style={{ padding: "8px 0", textAlign: "right", color: c.muted }}>{cov}%</td>
                     </tr>
                   );
                 })}
@@ -154,14 +220,17 @@ export function EmailTemplate({ report, baseUrl, scheduleName }: TemplateProps) 
 
           {/* Top issues */}
           {report.topIssues.length > 0 && (
-            <Section style={{ backgroundColor: c.card, padding: "0 24px 24px 24px", borderLeft: `1px solid ${c.border}`, borderRight: `1px solid ${c.border}` }}>
-              <Heading as="h2" style={{ color: c.text, fontSize: "16px", fontWeight: 600, margin: "8px 0 12px 0" }}>
+            <Section
+              className="email-card"
+              style={{ backgroundColor: c.card, padding: "0 24px 24px 24px", borderLeft: `1px solid ${c.border}`, borderRight: `1px solid ${c.border}` }}
+            >
+              <Heading as="h2" className="email-heading" style={{ color: c.text, fontSize: "16px", fontWeight: 600, margin: "8px 0 12px 0" }}>
                 Top issues (niet-geïndexeerd)
               </Heading>
               {report.topIssues.map((i) => (
-                <Row key={i.coverage_state} style={{ borderBottom: `1px solid ${c.accent50}` }}>
+                <Row key={i.coverage_state} className="email-row-border" style={{ borderBottom: `1px solid ${c.accent50}` }}>
                   <Column>
-                    <Text style={{ fontSize: "13px", color: c.text, margin: "8px 0" }}>{i.coverage_state}</Text>
+                    <Text className="email-text" style={{ fontSize: "13px", color: c.text, margin: "8px 0" }}>{i.coverage_state}</Text>
                   </Column>
                   <Column align="right">
                     <Text style={{ fontSize: "13px", color: c.red, margin: "8px 0", fontWeight: 500 }}>{fmt(i.count)}</Text>
@@ -173,13 +242,16 @@ export function EmailTemplate({ report, baseUrl, scheduleName }: TemplateProps) 
 
           {/* Recent ingediende URLs */}
           {report.recentPushes.length > 0 && (
-            <Section style={{ backgroundColor: c.card, padding: "0 24px 24px 24px", borderLeft: `1px solid ${c.border}`, borderRight: `1px solid ${c.border}` }}>
-              <Heading as="h2" style={{ color: c.text, fontSize: "16px", fontWeight: 600, margin: "8px 0 12px 0" }}>
+            <Section
+              className="email-card"
+              style={{ backgroundColor: c.card, padding: "0 24px 24px 24px", borderLeft: `1px solid ${c.border}`, borderRight: `1px solid ${c.border}` }}
+            >
+              <Heading as="h2" className="email-heading" style={{ color: c.text, fontSize: "16px", fontWeight: 600, margin: "8px 0 12px 0" }}>
                 Recent ingediende URLs
               </Heading>
               {report.recentPushes.map((u, idx) => (
-                <div key={idx} style={{ padding: "6px 0", borderBottom: `1px solid ${c.accent50}` }}>
-                  <Text style={{ fontSize: "12px", color: c.text, margin: 0, wordBreak: "break-all" }}>
+                <div key={idx} className="email-row-border" style={{ padding: "6px 0", borderBottom: `1px solid ${c.accent50}` }}>
+                  <Text className="email-text" style={{ fontSize: "12px", color: c.text, margin: 0, wordBreak: "break-all" }}>
                     <VerdictBadge verdict={u.verdict} /> {u.url}
                   </Text>
                 </div>
@@ -188,16 +260,27 @@ export function EmailTemplate({ report, baseUrl, scheduleName }: TemplateProps) 
           )}
 
           {/* Footer */}
-          <Section style={{ backgroundColor: c.accent50, padding: "20px 24px", borderRadius: "0 0 8px 8px", border: `1px solid ${c.border}`, borderTop: "none", textAlign: "center" }}>
-            <Text style={{ fontSize: "12px", color: c.muted, margin: 0 }}>
-              <Link href={baseUrl} style={{ color: c.primary, textDecoration: "none", fontWeight: 500 }}>
+          <Section
+            className="email-footer"
+            style={{ backgroundColor: c.accent50, padding: "20px 24px", borderRadius: "0 0 8px 8px", border: `1px solid ${c.border}`, borderTop: "none", textAlign: "center" }}
+          >
+            <Text className="email-muted" style={{ fontSize: "12px", color: c.muted, margin: 0 }}>
+              <Link href={baseUrl} className="email-link" style={{ color: c.primary, textDecoration: "none", fontWeight: 500 }}>
                 Open het volledige dashboard →
               </Link>
             </Text>
-            <Hr style={{ margin: "12px 0", borderColor: c.border }} />
-            <Text style={{ fontSize: "11px", color: c.muted, margin: 0 }}>
+            <Hr className="email-border-bottom" style={{ margin: "12px 0", borderColor: c.border }} />
+            <Text className="email-muted" style={{ fontSize: "11px", color: c.muted, margin: 0 }}>
               Deze mail wordt automatisch verstuurd door de EXIT Toys Indexing pipeline.
             </Text>
+            {unsubscribeUrl && (
+              <Text className="email-muted" style={{ fontSize: "11px", color: c.muted, margin: "6px 0 0 0" }}>
+                {recipientEmail ? <>Verzonden aan <span style={{ fontFamily: "monospace" }}>{recipientEmail}</span>. </> : null}
+                <Link href={unsubscribeUrl} className="email-link" style={{ color: c.primary, textDecoration: "underline" }}>
+                  Uitschrijven
+                </Link>
+              </Text>
+            )}
           </Section>
         </Container>
       </Body>
@@ -208,9 +291,12 @@ export function EmailTemplate({ report, baseUrl, scheduleName }: TemplateProps) 
 function StatCard({ label, value, accent }: { label: string; value: string; accent: string }) {
   return (
     <Column style={{ padding: "0 6px" }}>
-      <div style={{ backgroundColor: c.accent50, border: `1px solid ${c.border}`, borderRadius: "8px", padding: "12px" }}>
-        <Text style={{ fontSize: "11px", color: c.muted, margin: 0, textTransform: "uppercase", letterSpacing: "0.03em" }}>{label}</Text>
-        <Text style={{ fontSize: "20px", color: accent, margin: "4px 0 0 0", fontWeight: 600 }}>{value}</Text>
+      <div
+        className="email-stat-card"
+        style={{ backgroundColor: c.accent50, border: `1px solid ${c.border}`, borderRadius: "8px", padding: "12px" }}
+      >
+        <Text className="email-muted" style={{ fontSize: "11px", color: c.muted, margin: 0, textTransform: "uppercase", letterSpacing: "0.03em" }}>{label}</Text>
+        <Text className="email-stat-value" style={{ fontSize: "20px", color: accent, margin: "4px 0 0 0", fontWeight: 600 }}>{value}</Text>
       </div>
     </Column>
   );
