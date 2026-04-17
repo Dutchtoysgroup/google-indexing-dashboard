@@ -1,5 +1,5 @@
 import { listSchedules, recentLog } from "@/lib/email/schedules";
-import { listAllSubscribers } from "@/lib/email/subscribers";
+import { listAllSubscribersWithSchedules } from "@/lib/email/subscribers";
 import { getLatestRun, type WorkflowRun } from "@/lib/github-trigger";
 import { ScheduleManager } from "@/components/schedule-manager";
 import { SubscribersManager } from "@/components/subscribers-manager";
@@ -15,7 +15,7 @@ export default async function InstellingenPage() {
     [schedules, logEntries, subscribers] = await Promise.all([
       listSchedules(),
       recentLog(15),
-      listAllSubscribers(),
+      listAllSubscribersWithSchedules(),
     ]);
   } catch (e) {
     const msg = e instanceof Error ? e.message : String(e);
@@ -26,8 +26,6 @@ export default async function InstellingenPage() {
       </div>
     );
   }
-
-  const activeSubscriberCount = subscribers.filter((s) => !s.unsubscribed_at).length;
 
   // GitHub trigger state (non-fatal: if PAT ontbreekt, renderen we een config-card)
   const githubConfigured = Boolean(process.env.GITHUB_PAT);
@@ -59,12 +57,14 @@ export default async function InstellingenPage() {
           </p>
         </div>
 
-        <SubscribersManager initialSubscribers={subscribers} />
+        <SubscribersManager
+          initialSubscribers={subscribers}
+          schedules={schedules}
+        />
 
         <ScheduleManager
           initialSchedules={schedules}
           initialLog={logEntries}
-          activeSubscriberCount={activeSubscriberCount}
         />
       </section>
 

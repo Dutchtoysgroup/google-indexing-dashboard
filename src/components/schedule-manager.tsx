@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState } from "react";
 import type { EmailSchedule, EmailLogEntry } from "@/lib/email/schedules";
 
 const DAY_LABELS = ["Ma", "Di", "Wo", "Do", "Vr", "Za", "Zo"];
@@ -15,14 +15,11 @@ const PRESETS: Array<{ label: string; days: number[] }> = [
 type Props = {
   initialSchedules: EmailSchedule[];
   initialLog: EmailLogEntry[];
-  activeSubscriberCount: number;
 };
 
-export function ScheduleManager({ initialSchedules, initialLog, activeSubscriberCount }: Props) {
+export function ScheduleManager({ initialSchedules, initialLog }: Props) {
   const [schedules, setSchedules] = useState(initialSchedules);
   const [log] = useState(initialLog);
-  const [testStatus, setTestStatus] = useState<{ ok: boolean; msg: string } | null>(null);
-  const [pending, startTransition] = useTransition();
 
   // Form state
   const [name, setName] = useState("Dagelijks ochtendrapport");
@@ -78,54 +75,8 @@ export function ScheduleManager({ initialSchedules, initialLog, activeSubscriber
     if (r.ok) refreshAll();
   }
 
-  async function sendTest() {
-    setTestStatus(null);
-    startTransition(async () => {
-      const r = await fetch("/api/email/test", { method: "POST" });
-      const j = await r.json().catch(() => ({}));
-      if (r.ok) {
-        const count = j.recipientCount ?? 0;
-        setTestStatus({
-          ok: true,
-          msg: count === 1
-            ? `Verzonden naar 1 abonnee.`
-            : `Verzonden naar ${count} abonnees.`,
-        });
-      } else {
-        setTestStatus({ ok: false, msg: j.error || "Onbekende fout" });
-      }
-      // Reload to refresh log
-      setTimeout(() => location.reload(), 800);
-    });
-  }
-
   return (
     <div className="space-y-6">
-      {/* Testmail sectie */}
-      <section className="rounded-xl border border-exit-border bg-card p-5 shadow-sm">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <p className="text-sm font-medium text-foreground">Testmail</p>
-            <p className="mt-0.5 text-xs text-muted">
-              Stuurt nu een rapport-mail naar alle {activeSubscriberCount} actieve abonnee{activeSubscriberCount === 1 ? "" : "s"}.
-            </p>
-          </div>
-          <button
-            onClick={sendTest}
-            disabled={pending || activeSubscriberCount === 0}
-            className="rounded-lg bg-exit-green px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-exit-green-dark disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            {pending ? "Versturen…" : "Verstuur testmail nu"}
-          </button>
-        </div>
-        {testStatus && (
-          <p className={`mt-3 text-sm ${testStatus.ok ? "text-green-600" : "text-red-500"}`}>
-            {testStatus.ok ? "✓ " : "✗ "}
-            {testStatus.msg}
-          </p>
-        )}
-      </section>
-
       {/* Form */}
       <section className="rounded-xl border border-exit-border bg-card p-5 shadow-sm">
         <h2 className="text-lg font-semibold text-foreground">Nieuwe schedule</h2>

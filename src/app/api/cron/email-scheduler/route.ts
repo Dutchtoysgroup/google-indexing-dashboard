@@ -7,7 +7,7 @@ import {
   logEmail,
   markScheduleSent,
 } from "@/lib/email/schedules";
-import { listActiveSubscribers } from "@/lib/email/subscribers";
+import { getActiveSubscribersForSchedule } from "@/lib/email/subscribers";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -35,9 +35,9 @@ export async function GET(req: Request) {
     let sentCount = 0;
     let failedCount = 0;
     try {
-      const subscribers = await listActiveSubscribers();
+      const subscribers = await getActiveSubscribersForSchedule(sched.id);
       if (subscribers.length === 0) {
-        results.push({ id: sched.id, status: "skipped", sent: 0, failed: 0, error: "geen actieve abonnees" });
+        results.push({ id: sched.id, status: "skipped", sent: 0, failed: 0, error: "geen abonnees voor dit schedule" });
         continue;
       }
 
