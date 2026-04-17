@@ -10,6 +10,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { CoverageStateEntry } from "@/lib/db";
+import { CHART_GRID, CHART_AXIS, TOOLTIP_STYLE } from "@/lib/chart-theme";
 
 type Props = {
   data: CoverageStateEntry[];
@@ -33,9 +34,9 @@ function shortenState(state: string): string {
 export function CoverageStateChart({ data }: Props) {
   if (data.length === 0) {
     return (
-      <div className="rounded-xl border border-exit-border bg-white p-6 shadow-sm">
+      <div className="rounded-xl border border-exit-border bg-card p-6 shadow-sm">
         <h3 className="mb-4 text-lg font-semibold text-foreground">Redenen Niet Geindexeerd</h3>
-        <p className="text-sm text-slate-400">Geen data beschikbaar.</p>
+        <p className="text-sm text-muted">Geen data beschikbaar.</p>
       </div>
     );
   }
@@ -46,29 +47,25 @@ export function CoverageStateChart({ data }: Props) {
   }));
 
   return (
-    <div className="rounded-xl border border-exit-border bg-white p-6 shadow-sm">
+    <div className="rounded-xl border border-exit-border bg-card p-6 shadow-sm">
       <div className="mb-4 flex items-center justify-between">
         <h3 className="text-lg font-semibold text-foreground">Redenen Niet Geindexeerd</h3>
-        <span className="text-xs text-slate-400">Top {chartData.length} coverage states</span>
+        <span className="text-xs text-muted">Top {chartData.length} coverage states</span>
       </div>
       <ResponsiveContainer width="100%" height={Math.max(250, chartData.length * 36)}>
         <BarChart data={chartData} layout="vertical" margin={{ left: 30 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#E2E8D4" horizontal={false} />
-          <XAxis type="number" tick={{ fontSize: 11 }} stroke="#94a3b8" />
+          <CartesianGrid strokeDasharray="3 3" stroke={CHART_GRID} horizontal={false} />
+          <XAxis type="number" tick={{ fontSize: 11 }} stroke={CHART_AXIS} />
           <YAxis
             type="category"
             dataKey="reason"
             tick={{ fontSize: 11 }}
-            stroke="#94a3b8"
+            stroke={CHART_AXIS}
             width={200}
           />
           <Tooltip
             formatter={(value) => Number(value).toLocaleString("nl-NL")}
-            contentStyle={{
-              borderRadius: "8px",
-              border: "1px solid #E2E8D4",
-              fontSize: "13px",
-            }}
+            contentStyle={TOOLTIP_STYLE}
           />
           <Bar dataKey="count" fill="#ef4444" radius={[0, 6, 6, 0]} barSize={18} />
         </BarChart>

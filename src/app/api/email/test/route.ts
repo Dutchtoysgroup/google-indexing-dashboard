@@ -20,7 +20,7 @@ export async function POST() {
       baseUrl,
       scheduleName: "Testmail",
     });
-    const subject = `[EXIT Indexing] Testmail — ${report.totals.inspections_since} inspecties, ${report.totals.pushes_since} pushes`;
+    const subject = `[EXIT Indexing] Testmail — ${report.totals.inspections_since} inspecties, ${report.totals.pushes_since} indexeringsverzoeken`;
     await sendEmail({ to, subject, html, text });
     await logEmail({
       schedule_id: null,

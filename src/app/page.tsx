@@ -49,7 +49,7 @@ export default async function HomePage() {
         <h2 className="text-xl font-semibold text-foreground">
           Database niet beschikbaar
         </h2>
-        <p className="mt-2 text-slate-500">
+        <p className="mt-2 text-muted">
           Controleer de DATABASE_URL environment variable.
         </p>
         <p className="mt-4 text-xs text-red-400 font-mono max-w-xl mx-auto">
@@ -63,7 +63,7 @@ export default async function HomePage() {
     return (
       <div className="py-12 text-center">
         <h2 className="text-xl font-semibold text-foreground">Nog geen data</h2>
-        <p className="mt-2 text-slate-500">
+        <p className="mt-2 text-muted">
           Voer eerst{" "}
           <code className="rounded bg-exit-green-50 px-2 py-0.5 text-sm">
             python cli.py scan

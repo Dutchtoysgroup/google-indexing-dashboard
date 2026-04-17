@@ -1,6 +1,7 @@
 "use client";
 
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
+import { TOOLTIP_STYLE } from "@/lib/chart-theme";
 
 type Props = {
   indexed: number;
@@ -26,15 +27,15 @@ export function CoverageOverviewChart({ indexed, notIndexed, notChecked }: Props
 
   if (data.length === 0) {
     return (
-      <div className="rounded-xl border border-exit-border bg-white p-6">
+      <div className="rounded-xl border border-exit-border bg-card p-6">
         <h3 className="mb-4 text-lg font-semibold text-foreground">Coverage Overzicht</h3>
-        <p className="text-sm text-slate-400">Geen data beschikbaar.</p>
+        <p className="text-sm text-muted">Geen data beschikbaar.</p>
       </div>
     );
   }
 
   return (
-    <div className="rounded-xl border border-exit-border bg-white p-6 shadow-sm flex flex-col">
+    <div className="rounded-xl border border-exit-border bg-card p-6 shadow-sm flex flex-col">
       <h3 className="mb-4 text-lg font-semibold text-foreground">Coverage Overzicht</h3>
 
       {/* Donut with centered percentage */}
@@ -58,11 +59,7 @@ export function CoverageOverviewChart({ indexed, notIndexed, notChecked }: Props
               </Pie>
               <Tooltip
                 formatter={(value) => Number(value).toLocaleString("nl-NL")}
-                contentStyle={{
-                  borderRadius: "8px",
-                  border: "1px solid #E2E8D4",
-                  fontSize: "13px",
-                }}
+                contentStyle={TOOLTIP_STYLE}
               />
             </PieChart>
           </ResponsiveContainer>
@@ -80,7 +77,7 @@ export function CoverageOverviewChart({ indexed, notIndexed, notChecked }: Props
         {ITEMS.map((item) => (
           <div key={item.key} className="flex items-center gap-1.5">
             <div className="h-2.5 w-2.5 rounded-sm" style={{ backgroundColor: item.color }} />
-            <span className="text-xs text-slate-500">{item.key}</span>
+            <span className="text-xs text-muted">{item.key}</span>
           </div>
         ))}
       </div>

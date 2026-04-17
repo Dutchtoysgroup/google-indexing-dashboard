@@ -15,6 +15,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import { CHART_AXIS, TOOLTIP_STYLE_SM } from "@/lib/chart-theme";
 
 type Props = {
   shops: ShopSummary[];
@@ -65,7 +66,7 @@ export function StatsOverview({ shops, snapshots = [] }: Props) {
   ].filter((d) => d.value > 0);
 
   function getChartForKey(key: string) {
-    if (trendData.length < 2) return <p className="text-xs text-slate-400 p-4">Minimaal 2 dagen data nodig.</p>;
+    if (trendData.length < 2) return <p className="text-xs text-muted p-4">Minimaal 2 dagen data nodig.</p>;
 
     const chartConfig: Record<string, { dataKey: string; color: string; label: string }> = {
       total: { dataKey: "total", color: "#1a2e05", label: "Totaal URLs" },
@@ -84,9 +85,9 @@ export function StatsOverview({ shops, snapshots = [] }: Props) {
           <div className="flex-1">
             <ResponsiveContainer width="100%" height={120}>
               <AreaChart data={trendData}>
-                <XAxis dataKey="date" tick={{ fontSize: 10 }} stroke="#94a3b8" />
-                <YAxis tick={{ fontSize: 10 }} stroke="#94a3b8" domain={[0, 100]} unit="%" />
-                <Tooltip formatter={(v) => `${v}%`} contentStyle={{ borderRadius: "6px", border: "1px solid #E2E8D4", fontSize: "12px" }} />
+                <XAxis dataKey="date" tick={{ fontSize: 10 }} stroke={CHART_AXIS} />
+                <YAxis tick={{ fontSize: 10 }} stroke={CHART_AXIS} domain={[0, 100]} unit="%" />
+                <Tooltip formatter={(v) => `${v}%`} contentStyle={TOOLTIP_STYLE_SM} />
                 <Area type="monotone" dataKey={cfg.dataKey} stroke={cfg.color} fill={cfg.color} fillOpacity={0.15} strokeWidth={2} />
               </AreaChart>
             </ResponsiveContainer>
@@ -99,7 +100,7 @@ export function StatsOverview({ shops, snapshots = [] }: Props) {
                     <Cell key={entry.name} fill={entry.color} />
                   ))}
                 </Pie>
-                <Tooltip formatter={(v) => Number(v).toLocaleString("nl-NL")} contentStyle={{ borderRadius: "6px", border: "1px solid #E2E8D4", fontSize: "11px" }} />
+                <Tooltip formatter={(v) => Number(v).toLocaleString("nl-NL")} contentStyle={{ ...TOOLTIP_STYLE_SM, fontSize: "11px" }} />
               </PieChart>
             </ResponsiveContainer>
           </div>
@@ -110,9 +111,9 @@ export function StatsOverview({ shops, snapshots = [] }: Props) {
     return (
       <ResponsiveContainer width="100%" height={120}>
         <AreaChart data={trendData}>
-          <XAxis dataKey="date" tick={{ fontSize: 10 }} stroke="#94a3b8" />
-          <YAxis tick={{ fontSize: 10 }} stroke="#94a3b8" />
-          <Tooltip contentStyle={{ borderRadius: "6px", border: "1px solid #E2E8D4", fontSize: "12px" }} />
+          <XAxis dataKey="date" tick={{ fontSize: 10 }} stroke={CHART_AXIS} />
+          <YAxis tick={{ fontSize: 10 }} stroke={CHART_AXIS} />
+          <Tooltip contentStyle={TOOLTIP_STYLE_SM} />
           <Area type="monotone" dataKey={cfg.dataKey} stroke={cfg.color} fill={cfg.color} fillOpacity={0.15} strokeWidth={2} />
         </AreaChart>
       </ResponsiveContainer>
@@ -126,13 +127,13 @@ export function StatsOverview({ shops, snapshots = [] }: Props) {
           <StaggerItem key={stat.label}>
             <div
               onClick={() => setExpanded(expanded === stat.key ? null : stat.key)}
-              className={`cursor-pointer rounded-xl border bg-white p-4 shadow-sm transition-all duration-200 hover:shadow-md ${
+              className={`cursor-pointer rounded-xl border bg-card p-4 shadow-sm transition-all duration-200 hover:shadow-md ${
                 expanded === stat.key
                   ? "border-exit-green ring-1 ring-exit-green/30"
                   : "border-exit-border hover:border-exit-green-200"
               }`}
             >
-              <p className="text-sm text-slate-500">{stat.label}</p>
+              <p className="text-sm text-muted">{stat.label}</p>
               <p className={`mt-1 text-2xl font-semibold ${stat.color}`}>
                 {stat.value}
               </p>
@@ -150,8 +151,8 @@ export function StatsOverview({ shops, snapshots = [] }: Props) {
             transition={{ duration: 0.25, ease: "easeOut" }}
             className="overflow-hidden"
           >
-            <div className="mt-4 rounded-xl border border-exit-border bg-white p-4 shadow-sm">
-              <p className="mb-2 text-sm font-medium text-slate-500">
+            <div className="mt-4 rounded-xl border border-exit-border bg-card p-4 shadow-sm">
+              <p className="mb-2 text-sm font-medium text-muted">
                 {stats.find((s) => s.key === expanded)?.label} — 30 dagen trend
               </p>
               {getChartForKey(expanded)}

@@ -45,7 +45,7 @@ export async function GET(req: Request) {
         baseUrl,
         scheduleName: sched.name,
       });
-      const subject = `[EXIT Indexing] ${sched.name} — ${report.totals.inspections_since} inspecties, ${report.totals.pushes_since} pushes`;
+      const subject = `[EXIT Indexing] ${sched.name} — ${report.totals.inspections_since} inspecties, ${report.totals.pushes_since} indexeringsverzoeken`;
       await sendEmail({ to, subject, html, text });
       await markScheduleSent(sched.id);
       await logEmail({

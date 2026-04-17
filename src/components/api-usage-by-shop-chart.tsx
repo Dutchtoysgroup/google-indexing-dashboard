@@ -12,6 +12,7 @@ import {
 } from "recharts";
 import { ApiUsageByShop } from "@/lib/db";
 import { SHOP_INFO } from "@/lib/shops";
+import { CHART_GRID, CHART_AXIS, TOOLTIP_STYLE } from "@/lib/chart-theme";
 
 type Props = {
   data: ApiUsageByShop[];
@@ -20,9 +21,9 @@ type Props = {
 export function ApiUsageByShopChart({ data }: Props) {
   if (data.length === 0) {
     return (
-      <div className="rounded-xl border border-exit-border bg-white p-6 shadow-sm">
+      <div className="rounded-xl border border-exit-border bg-card p-6 shadow-sm">
         <h3 className="mb-4 text-lg font-semibold text-foreground">API Gebruik per Shop</h3>
-        <p className="text-sm text-slate-400">Geen data beschikbaar.</p>
+        <p className="text-sm text-muted">Geen data beschikbaar.</p>
       </div>
     );
   }
@@ -32,25 +33,25 @@ export function ApiUsageByShopChart({ data }: Props) {
     return {
       shop: info ? info.name : d.shop_id,
       flag: info?.flag ?? "🌍",
-      Pushes: d.pushes,
+      Indexeringsverzoeken: d.pushes,
       Inspections: d.inspections,
     };
   });
 
   return (
-    <div className="rounded-xl border border-exit-border bg-white p-6 shadow-sm">
+    <div className="rounded-xl border border-exit-border bg-card p-6 shadow-sm">
       <h3 className="mb-4 text-lg font-semibold text-foreground">API Gebruik per Shop</h3>
       <ResponsiveContainer width="100%" height={300}>
         <BarChart data={chartData}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#E2E8D4" />
+          <CartesianGrid strokeDasharray="3 3" stroke={CHART_GRID} />
           <XAxis
             dataKey="flag"
             tick={{ fontSize: 14 }}
-            stroke="#94a3b8"
+            stroke={CHART_AXIS}
             interval={0}
             height={30}
           />
-          <YAxis tick={{ fontSize: 11 }} stroke="#94a3b8" />
+          <YAxis tick={{ fontSize: 11 }} stroke={CHART_AXIS} />
           <Tooltip
             labelFormatter={(_, payload) => {
               if (payload && payload.length > 0) {
@@ -59,15 +60,11 @@ export function ApiUsageByShopChart({ data }: Props) {
               }
               return "";
             }}
-            contentStyle={{
-              borderRadius: "8px",
-              border: "1px solid #E2E8D4",
-              fontSize: "13px",
-            }}
+            contentStyle={TOOLTIP_STYLE}
           />
           <Legend />
-          <Bar dataKey="Pushes" stackId="a" fill="#6B8E23" radius={[0, 0, 0, 0]} />
-          <Bar dataKey="Inspections" stackId="a" fill="#f68d2e" radius={[4, 4, 0, 0]} />
+          <Bar dataKey="Inspections" stackId="a" fill="#f68d2e" radius={[0, 0, 0, 0]} />
+          <Bar dataKey="Indexeringsverzoeken" stackId="a" fill="#6B8E23" radius={[4, 4, 0, 0]} />
         </BarChart>
       </ResponsiveContainer>
     </div>

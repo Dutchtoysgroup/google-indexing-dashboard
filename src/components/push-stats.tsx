@@ -19,7 +19,7 @@ export function PushStats({ usage, dailyLimit = 200 }: Props) {
 
   const stats = [
     {
-      label: "Pushes vandaag",
+      label: "Verzoeken vandaag",
       value: `${usage.indexing_today} / ${dailyLimit}`,
       color: "text-exit-green",
       sub: (
@@ -37,12 +37,12 @@ export function PushStats({ usage, dailyLimit = 200 }: Props) {
       color: "text-[#f68d2e]",
     },
     {
-      label: "Pushes deze week",
+      label: "Verzoeken deze week",
       value: usage.indexing_week.toLocaleString("nl-NL"),
       color: "text-exit-green",
     },
     {
-      label: "Pushes deze maand",
+      label: "Verzoeken deze maand",
       value: usage.indexing_month.toLocaleString("nl-NL"),
       color: "text-exit-green",
     },
@@ -52,8 +52,8 @@ export function PushStats({ usage, dailyLimit = 200 }: Props) {
     <StaggerContainer className="grid grid-cols-2 gap-4 sm:grid-cols-4">
       {stats.map((stat) => (
         <StaggerItem key={stat.label}>
-          <div className="rounded-xl border border-exit-border bg-white p-4 shadow-sm transition-all duration-200 hover:border-exit-green-200">
-            <p className="text-sm text-slate-500">{stat.label}</p>
+          <div className="rounded-xl border border-exit-border bg-card p-4 shadow-sm transition-all duration-200 hover:border-exit-green-200">
+            <p className="text-sm text-muted">{stat.label}</p>
             <p className={`mt-1 text-2xl font-semibold ${stat.color}`}>
               {stat.value}
             </p>

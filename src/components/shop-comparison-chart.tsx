@@ -12,6 +12,7 @@ import {
 } from "recharts";
 import { ShopSummary } from "@/lib/db";
 import { SHOP_INFO } from "@/lib/shops";
+import { CHART_GRID, CHART_AXIS, TOOLTIP_STYLE } from "@/lib/chart-theme";
 
 type Props = {
   shops: ShopSummary[];
@@ -36,26 +37,22 @@ export function ShopComparisonChart({ shops }: Props) {
   }
 
   return (
-    <div className="rounded-xl border border-exit-border bg-white p-6 shadow-sm">
+    <div className="rounded-xl border border-exit-border bg-card p-6 shadow-sm">
       <h3 className="mb-4 text-lg font-semibold text-foreground">Coverage per Webshop</h3>
       <ResponsiveContainer width="100%" height={Math.max(300, chartData.length * 36)}>
         <BarChart data={chartData} layout="vertical" margin={{ left: 20 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#E2E8D4" horizontal={false} />
-          <XAxis type="number" domain={[0, 100]} tick={{ fontSize: 12 }} stroke="#94a3b8" unit="%" />
+          <CartesianGrid strokeDasharray="3 3" stroke={CHART_GRID} horizontal={false} />
+          <XAxis type="number" domain={[0, 100]} tick={{ fontSize: 12 }} stroke={CHART_AXIS} unit="%" />
           <YAxis
             type="category"
             dataKey="shop"
             tick={{ fontSize: 12 }}
-            stroke="#94a3b8"
+            stroke={CHART_AXIS}
             width={130}
           />
           <Tooltip
             formatter={(value) => `${value}%`}
-            contentStyle={{
-              borderRadius: "8px",
-              border: "1px solid #E2E8D4",
-              fontSize: "13px",
-            }}
+            contentStyle={TOOLTIP_STYLE}
           />
           <Bar dataKey="coverage" radius={[0, 6, 6, 0]} barSize={20}>
             {chartData.map((entry, index) => (

@@ -16,6 +16,8 @@
   --border: #E2E8D4;
   --muted: #64748b;
   --header-bg: #1A2E05;
+  --chart-grid: #E2E8D4;
+  --chart-axis: #94a3b8;
 
   /* Semantic */
   --green: #22c55e;
@@ -24,9 +26,29 @@
   --blue: #2563eb;
 }
 
+[data-theme="dark"] {
+  --exit-green: #8AAD3A;
+  --exit-green-light: #A8C85A;
+  --exit-green-dark: #C8D99A;
+  --exit-green-50: #1F2A14;
+  --exit-green-100: #2F3F1C;
+  --exit-green-200: #4A6318;
+
+  --background: #0F1608;
+  --foreground: #E8EECC;
+  --card: #1A2410;
+  --border: #2A3A18;
+  --muted: #9AA89A;
+  --header-bg: #0B1005;
+  --chart-grid: #2A3A18;
+  --chart-axis: #7B8A7B;
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-muted: var(--muted);
   --color-exit-green: var(--exit-green);
   --color-exit-green-light: var(--exit-green-light);
   --color-exit-green-dark: var(--exit-green-dark);

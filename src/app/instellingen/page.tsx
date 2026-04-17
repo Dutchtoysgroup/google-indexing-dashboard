@@ -27,7 +27,7 @@ export default async function InstellingenPage() {
     <div className="space-y-8">
       <div>
         <h1 className="text-2xl font-semibold text-foreground">Instellingen</h1>
-        <p className="mt-1 text-sm text-slate-500">
+        <p className="mt-1 text-sm text-muted">
           Beheer wanneer en hoe vaak je een e-mailrapport ontvangt over de indexing pipeline.
         </p>
       </div>

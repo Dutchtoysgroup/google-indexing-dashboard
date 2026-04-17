@@ -2,6 +2,7 @@
 
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
 import { ShopSummary } from "@/lib/db";
+import { TOOLTIP_STYLE } from "@/lib/chart-theme";
 
 type Props = {
   shop: ShopSummary;
@@ -22,15 +23,15 @@ export function CoverageChart({ shop }: Props) {
 
   if (data.length === 0) {
     return (
-      <div className="rounded-xl border border-exit-border bg-white p-6 shadow-sm">
+      <div className="rounded-xl border border-exit-border bg-card p-6 shadow-sm">
         <h3 className="mb-4 text-lg font-semibold text-foreground">Coverage</h3>
-        <p className="text-sm text-slate-400">Geen data beschikbaar.</p>
+        <p className="text-sm text-muted">Geen data beschikbaar.</p>
       </div>
     );
   }
 
   return (
-    <div className="rounded-xl border border-exit-border bg-white p-6 shadow-sm">
+    <div className="rounded-xl border border-exit-border bg-card p-6 shadow-sm">
       <h3 className="mb-4 text-lg font-semibold text-foreground">Coverage</h3>
       <ResponsiveContainer width="100%" height={250}>
         <PieChart>
@@ -52,11 +53,7 @@ export function CoverageChart({ shop }: Props) {
           </Pie>
           <Tooltip
             formatter={(value) => Number(value).toLocaleString("nl-NL")}
-            contentStyle={{
-              borderRadius: "8px",
-              border: "1px solid #E2E8D4",
-              fontSize: "13px",
-            }}
+            contentStyle={TOOLTIP_STYLE}
           />
           <Legend />
         </PieChart>

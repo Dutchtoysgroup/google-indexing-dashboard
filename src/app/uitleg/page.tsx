@@ -7,15 +7,15 @@ export default function UitlegPage() {
     <div className="space-y-8">
       <div>
         <h1 className="text-2xl font-bold text-foreground">Uitleg</h1>
-        <p className="mt-1 text-slate-500">
+        <p className="mt-1 text-muted">
           Hoe het EXIT Toys Indexing Dashboard werkt en wat de cijfers betekenen.
         </p>
       </div>
 
       {/* Wat doet deze tool? */}
-      <section className="rounded-xl border border-exit-border bg-white p-6 shadow-sm">
+      <section className="rounded-xl border border-exit-border bg-card p-6 shadow-sm">
         <h2 className="text-lg font-semibold text-foreground mb-3">Wat doet deze tool?</h2>
-        <p className="text-sm text-slate-600 leading-relaxed">
+        <p className="text-sm text-foreground leading-relaxed">
           Het Indexing Dashboard monitort de Google-indexeringsstatus van alle EXIT Toys webshops.
           Het controleert automatisch of productpagina&apos;s, collectiepagina&apos;s en andere URLs
           zijn opgenomen in de Google zoekindex. URLs die niet geindexeerd zijn, worden automatisch
@@ -24,7 +24,7 @@ export default function UitlegPage() {
       </section>
 
       {/* Hoe werkt het? */}
-      <section className="rounded-xl border border-exit-border bg-white p-6 shadow-sm">
+      <section className="rounded-xl border border-exit-border bg-card p-6 shadow-sm">
         <h2 className="text-lg font-semibold text-foreground mb-4">Hoe werkt het?</h2>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {[
@@ -40,7 +40,7 @@ export default function UitlegPage() {
             },
             {
               step: "3",
-              title: "Indexering pushen",
+              title: "Indexeringsverzoek versturen",
               desc: "URLs die niet geindexeerd zijn, worden aangemeld bij Google via de Indexing API met een URL_UPDATED notificatie.",
             },
             {
@@ -54,20 +54,20 @@ export default function UitlegPage() {
                 {item.step}
               </div>
               <h3 className="font-medium text-foreground">{item.title}</h3>
-              <p className="mt-1 text-xs text-slate-500 leading-relaxed">{item.desc}</p>
+              <p className="mt-1 text-xs text-muted leading-relaxed">{item.desc}</p>
             </div>
           ))}
         </div>
         <div className="mt-4 rounded-lg bg-exit-green-50 p-4">
           <p className="text-sm text-exit-green-dark">
-            <strong>Automatisch:</strong> De pipeline draait dagelijks om 04:00 (NL tijd) via GitHub Actions.
+            <strong>Automatisch:</strong> De pipeline draait dagelijks om 04:00 (NL tijd) via een launchd cron-job op de Mac Mini.
             Bij nieuwe producten of wijzigingen worden URLs automatisch opgepikt bij de volgende run.
           </p>
         </div>
       </section>
 
       {/* Wat betekenen de cijfers? */}
-      <section className="rounded-xl border border-exit-border bg-white p-6 shadow-sm">
+      <section className="rounded-xl border border-exit-border bg-card p-6 shadow-sm">
         <h2 className="text-lg font-semibold text-foreground mb-4">Wat betekenen de cijfers?</h2>
         <div className="space-y-3">
           {[
@@ -101,7 +101,7 @@ export default function UitlegPage() {
               <div className={`mt-1 h-3 w-3 flex-shrink-0 rounded-full ${item.color}`} />
               <div>
                 <h3 className="text-sm font-medium text-foreground">{item.label}</h3>
-                <p className="text-xs text-slate-500">{item.desc}</p>
+                <p className="text-xs text-muted">{item.desc}</p>
               </div>
             </div>
           ))}
@@ -109,24 +109,24 @@ export default function UitlegPage() {
       </section>
 
       {/* API Limieten */}
-      <section className="rounded-xl border border-exit-border bg-white p-6 shadow-sm">
+      <section className="rounded-xl border border-exit-border bg-card p-6 shadow-sm">
         <h2 className="text-lg font-semibold text-foreground mb-4">API Limieten</h2>
         <div className="grid gap-4 sm:grid-cols-2">
           <div className="rounded-lg bg-exit-green-50 p-4">
-            <h3 className="font-medium text-exit-green-dark">Indexing API (Pushes)</h3>
+            <h3 className="font-medium text-exit-green-dark">Indexing API (Indexeringsverzoeken)</h3>
             <p className="mt-1 text-2xl font-bold text-exit-green">200 / dag</p>
-            <p className="mt-1 text-xs text-slate-500">Totaal over alle shops. Reset om middernacht Pacific Time (09:00 NL).</p>
+            <p className="mt-1 text-xs text-muted">Totaal over alle shops. Reset om middernacht Pacific Time (09:00 NL).</p>
           </div>
           <div className="rounded-lg bg-blue-50 p-4">
             <h3 className="font-medium text-blue-700">URL Inspection API</h3>
             <p className="mt-1 text-2xl font-bold text-blue-600">2.000 / dag</p>
-            <p className="mt-1 text-xs text-slate-500">Per property. Standaard 15 per shop per run, instelbaar via config.</p>
+            <p className="mt-1 text-xs text-muted">Per property. Standaard 15 per shop per run, instelbaar via config.</p>
           </div>
         </div>
       </section>
 
       {/* Webshops */}
-      <section className="rounded-xl border border-exit-border bg-white p-6 shadow-sm">
+      <section className="rounded-xl border border-exit-border bg-card p-6 shadow-sm">
         <h2 className="text-lg font-semibold text-foreground mb-4">Webshops ({shops.length})</h2>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {shops.map(([id, info]) => (
@@ -134,7 +134,7 @@ export default function UitlegPage() {
               <span className="text-xl">{info.flag}</span>
               <div>
                 <p className="text-sm font-medium text-foreground">{info.name}</p>
-                <p className="text-xs text-slate-400">{info.domain}</p>
+                <p className="text-xs text-muted">{info.domain}</p>
               </div>
             </div>
           ))}
@@ -142,13 +142,13 @@ export default function UitlegPage() {
       </section>
 
       {/* FAQ */}
-      <section className="rounded-xl border border-exit-border bg-white p-6 shadow-sm">
+      <section className="rounded-xl border border-exit-border bg-card p-6 shadow-sm">
         <h2 className="text-lg font-semibold text-foreground mb-4">Veelgestelde vragen</h2>
         <div className="space-y-4">
           {[
             {
-              q: "Hoe lang duurt het voordat een gepushte URL geindexeerd wordt?",
-              a: "Dit varieert. Sommige URLs worden binnen een paar uur opgepikt, andere kunnen dagen duren. De tool pusht automatisch opnieuw na 3 dagen als een URL nog steeds niet geindexeerd is.",
+              q: "Hoe lang duurt het voordat een ingediende URL geindexeerd wordt?",
+              a: "Dit varieert. Sommige URLs worden binnen een paar uur opgepikt, andere kunnen dagen duren. De tool stuurt automatisch opnieuw een indexeringsverzoek na 3 dagen als een URL nog steeds niet geindexeerd is.",
             },
             {
               q: "Waarom is mijn coverage percentage laag?",
@@ -156,7 +156,7 @@ export default function UitlegPage() {
             },
             {
               q: "Wat betekent 'Crawled - currently not indexed'?",
-              a: "Google heeft de pagina bezocht maar besloten om deze (nog) niet in de index op te nemen. Dit kan komen door kwaliteitsbeoordeling. De tool blijft deze URLs pushen.",
+              a: "Google heeft de pagina bezocht maar besloten om deze (nog) niet in de index op te nemen. Dit kan komen door kwaliteitsbeoordeling. De tool blijft voor deze URLs indexeringsverzoeken versturen.",
             },
             {
               q: "Kan ik de tool handmatig draaien?",
@@ -164,12 +164,12 @@ export default function UitlegPage() {
             },
             {
               q: "Hoe vaak wordt de data ververst?",
-              a: "De GitHub Actions pipeline draait dagelijks om 04:00 NL tijd. Het dashboard toont altijd de meest recente data bij elk bezoek.",
+              a: "De pipeline draait dagelijks om 04:00 (NL tijd) via een launchd cron-job op de Mac Mini. Het dashboard toont altijd de meest recente data bij elk bezoek.",
             },
           ].map((faq) => (
             <div key={faq.q} className="rounded-lg border border-exit-border/30 p-4">
               <h3 className="text-sm font-medium text-foreground">{faq.q}</h3>
-              <p className="mt-2 text-xs text-slate-500 leading-relaxed">{faq.a}</p>
+              <p className="mt-2 text-xs text-muted leading-relaxed">{faq.a}</p>
             </div>
           ))}
         </div>

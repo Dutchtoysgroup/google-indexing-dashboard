@@ -21,7 +21,7 @@ export function ShopCard({ shop }: Props) {
   return (
     <Link
       href={`/shop/${shop.shop_id}`}
-      className="block rounded-xl border border-exit-border bg-white p-5 shadow-sm transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 hover:border-exit-green-200"
+      className="block rounded-xl border border-exit-border bg-card p-5 shadow-sm transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 hover:border-exit-green-200"
     >
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
@@ -30,7 +30,7 @@ export function ShopCard({ shop }: Props) {
             <h3 className="font-semibold text-foreground">
               {info?.name ?? shop.shop_id}
             </h3>
-            <p className="text-xs text-slate-400">{info?.domain ?? ""}</p>
+            <p className="text-xs text-muted">{info?.domain ?? ""}</p>
           </div>
         </div>
         <span className="text-lg font-bold text-foreground">{coverage}%</span>
@@ -45,7 +45,7 @@ export function ShopCard({ shop }: Props) {
       </div>
 
       {/* Stats */}
-      <div className="mt-3 flex justify-between text-xs text-slate-500">
+      <div className="mt-3 flex justify-between text-xs text-muted">
         <span>{shop.total_urls.toLocaleString("nl-NL")} URLs</span>
         <span className="text-green-600">{shop.indexed} indexed</span>
         <span className="text-red-500">{shop.not_indexed} failed</span>

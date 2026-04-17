@@ -6,6 +6,7 @@ import { CoverageChart } from "@/components/coverage-chart";
 import { TrendChart } from "@/components/trend-chart";
 import { UrlTable } from "@/components/url-table";
 import { ActivityChart } from "@/components/activity-chart";
+import { ShopStatsOverview } from "@/components/shop-stats-overview";
 
 export const dynamic = "force-dynamic";
 
@@ -52,7 +53,7 @@ export default async function ShopPage({ params, searchParams }: Props) {
   } catch {
     return (
       <div className="py-12 text-center">
-        <p className="text-slate-500">Fout bij ophalen data.</p>
+        <p className="text-muted">Fout bij ophalen data.</p>
       </div>
     );
   }
@@ -60,15 +61,10 @@ export default async function ShopPage({ params, searchParams }: Props) {
   if (!summary) {
     return (
       <div className="py-12 text-center">
-        <p className="text-slate-500">Shop niet gevonden.</p>
+        <p className="text-muted">Shop niet gevonden.</p>
       </div>
     );
   }
-
-  const coverage =
-    summary.total_urls > 0
-      ? ((summary.indexed / summary.total_urls) * 100).toFixed(1)
-      : "0";
 
   return (
     <div className="space-y-6">
@@ -76,7 +72,7 @@ export default async function ShopPage({ params, searchParams }: Props) {
       <div className="flex items-center gap-4">
         <Link
           href="/"
-          className="flex h-8 w-8 items-center justify-center rounded-lg border border-exit-border text-slate-400 transition-colors hover:text-exit-green hover:border-exit-green-200"
+          className="flex h-8 w-8 items-center justify-center rounded-lg border border-exit-border text-muted transition-colors hover:text-exit-green hover:border-exit-green-200"
         >
           &larr;
         </Link>
@@ -87,58 +83,17 @@ export default async function ShopPage({ params, searchParams }: Props) {
               {info?.name ?? shopId}
             </h2>
           </div>
-          <p className="text-sm text-slate-400">{info?.domain ?? shopId}</p>
+          <p className="text-sm text-muted">{info?.domain ?? shopId}</p>
         </div>
       </div>
 
-      {/* Indexering Stats */}
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-5">
-        {[
-          { label: "Totaal", value: summary.total_urls, color: "text-foreground" },
-          { label: "Geindexeerd", value: summary.indexed, color: "text-green-600" },
-          { label: "Niet geindexeerd", value: summary.not_indexed, color: "text-red-500" },
-          { label: "Niet gecheckt", value: summary.not_checked, color: "text-yellow-600" },
-          { label: "Coverage", value: `${coverage}%`, color: "text-exit-green" },
-        ].map((s) => (
-          <div
-            key={s.label}
-            className="rounded-xl border border-exit-border bg-white p-4 shadow-sm"
-          >
-            <p className="text-sm text-slate-500">{s.label}</p>
-            <p className={`mt-1 text-2xl font-semibold ${s.color}`}>
-              {typeof s.value === "number"
-                ? s.value.toLocaleString("nl-NL")
-                : s.value}
-            </p>
-          </div>
-        ))}
-      </div>
-
-      {/* Push Activiteit Stats */}
-      <div>
-        <h3 className="mb-3 text-base font-semibold text-foreground">Push activiteit</h3>
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-5">
-          {[
-            { label: "Totale pushes", value: extraStats.total_pushes, color: "text-exit-green" },
-            { label: "Nooit gepusht", value: extraStats.never_pushed, color: "text-orange-500" },
-            { label: "Nooit gecheckt", value: extraStats.never_inspected, color: "text-yellow-600" },
-            { label: "Laatst gepusht", value: formatDateTime(extraStats.last_pushed), color: "text-slate-700", isText: true },
-            { label: "Laatst gecheckt", value: formatDateTime(extraStats.last_inspected), color: "text-slate-700", isText: true },
-          ].map((s) => (
-            <div
-              key={s.label}
-              className="rounded-xl border border-exit-border bg-white p-4 shadow-sm"
-            >
-              <p className="text-sm text-slate-500">{s.label}</p>
-              <p className={`mt-1 font-semibold ${s.color} ${"isText" in s && s.isText ? "text-sm" : "text-2xl"}`}>
-                {typeof s.value === "number"
-                  ? s.value.toLocaleString("nl-NL")
-                  : s.value}
-              </p>
-            </div>
-          ))}
-        </div>
-      </div>
+      {/* Klikbare stat cards met grafieken */}
+      <ShopStatsOverview
+        summary={summary}
+        extraStats={extraStats}
+        snapshots={snapshots}
+        apiActivity={shopApiActivity}
+      />
 
       {/* Charts */}
       <div className="grid gap-6 lg:grid-cols-2">
@@ -147,23 +102,23 @@ export default async function ShopPage({ params, searchParams }: Props) {
       </div>
 
       {/* API Activity Chart */}
-      <ActivityChart data={shopApiActivity} title="Push & inspection activiteit (30 dagen)" />
+      <ActivityChart data={shopApiActivity} title="Verzoeken & inspecties activiteit (30 dagen)" />
 
       {/* Recent Pushed URLs */}
       {recentPushes.length > 0 && (
-        <div className="rounded-xl border border-exit-border bg-white shadow-sm">
+        <div className="rounded-xl border border-exit-border bg-card shadow-sm">
           <div className="border-b border-exit-border p-4">
-            <h3 className="font-semibold text-foreground">Recent gepushte URLs</h3>
+            <h3 className="font-semibold text-foreground">Recent ingediende URLs</h3>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-exit-border/50 text-left text-xs text-slate-500">
+                <tr className="border-b border-exit-border/50 text-left text-xs text-muted">
                   <th className="px-4 py-3 font-medium">URL</th>
                   <th className="px-4 py-3 font-medium">Type</th>
                   <th className="px-4 py-3 font-medium">Status</th>
-                  <th className="px-4 py-3 font-medium">Gepusht op</th>
-                  <th className="px-4 py-3 font-medium">Pushes</th>
+                  <th className="px-4 py-3 font-medium">Ingediend op</th>
+                  <th className="px-4 py-3 font-medium">Verzoeken</th>
                 </tr>
               </thead>
               <tbody>
@@ -179,7 +134,7 @@ export default async function ShopPage({ params, searchParams }: Props) {
                         {row.url.replace(/^https?:\/\/www\./, "")}
                       </a>
                     </td>
-                    <td className="px-4 py-3 capitalize text-slate-500">{row.url_type ?? "-"}</td>
+                    <td className="px-4 py-3 capitalize text-muted">{row.url_type ?? "-"}</td>
                     <td className="px-4 py-3">
                       {row.verdict === "PASS" ? (
                         <span className="inline-flex items-center rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-700">Indexed</span>
@@ -189,7 +144,7 @@ export default async function ShopPage({ params, searchParams }: Props) {
                         <span className="inline-flex items-center rounded-full bg-yellow-100 px-2 py-0.5 text-xs font-medium text-yellow-700">Unknown</span>
                       )}
                     </td>
-                    <td className="px-4 py-3 text-xs text-slate-400">
+                    <td className="px-4 py-3 text-xs text-muted">
                       {formatDateTime(row.last_pushed)}
                     </td>
                     <td className="px-4 py-3 text-center">
@@ -206,7 +161,7 @@ export default async function ShopPage({ params, searchParams }: Props) {
       )}
 
       {/* URL Table */}
-      <Suspense fallback={<div className="py-8 text-center text-slate-400">Laden...</div>}>
+      <Suspense fallback={<div className="py-8 text-center text-muted">Laden...</div>}>
         <UrlTable
           urls={urlData.urls}
           total={urlData.total}

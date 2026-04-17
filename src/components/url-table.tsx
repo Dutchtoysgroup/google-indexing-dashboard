@@ -86,7 +86,7 @@ export function UrlTable({ urls, total, page, pageSize }: Props) {
   const currentVerdict = searchParams.get("verdict") ?? "";
 
   return (
-    <div className="rounded-xl border border-exit-border bg-white shadow-sm">
+    <div className="rounded-xl border border-exit-border bg-card shadow-sm">
       <div className="flex flex-col gap-3 border-b border-exit-border p-4 sm:flex-row sm:flex-wrap sm:items-center">
         <h3 className="font-semibold text-foreground">
           URLs ({total.toLocaleString("nl-NL")})
@@ -134,24 +134,24 @@ export function UrlTable({ urls, total, page, pageSize }: Props) {
               </a>
               <VerdictBadge verdict={row.verdict} />
             </div>
-            <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-500">
+            <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted">
               {row.url_type && (
                 <span className="capitalize">{row.url_type}</span>
               )}
               {row.coverage_state && (
-                <span className="text-slate-500">
+                <span className="text-muted">
                   {COVERAGE_LABELS[row.coverage_state] ?? row.coverage_state}
                 </span>
               )}
               {row.last_inspected && (
-                <span className="text-slate-400">
+                <span className="text-muted">
                   gecheckt{" "}
                   {new Date(row.last_inspected).toLocaleDateString("nl-NL")}
                 </span>
               )}
               {row.last_pushed && (
-                <span className="text-slate-400">
-                  gepusht{" "}
+                <span className="text-muted">
+                  verzoek{" "}
                   {new Date(row.last_pushed).toLocaleDateString("nl-NL")}
                 </span>
               )}
@@ -162,7 +162,7 @@ export function UrlTable({ urls, total, page, pageSize }: Props) {
           </li>
         ))}
         {urls.length === 0 && (
-          <li className="px-4 py-8 text-center text-sm text-slate-400">
+          <li className="px-4 py-8 text-center text-sm text-muted">
             Geen URLs gevonden.
           </li>
         )}
@@ -172,14 +172,14 @@ export function UrlTable({ urls, total, page, pageSize }: Props) {
       <div className="hidden overflow-x-auto sm:block">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-exit-border/50 text-left text-xs text-slate-500">
+            <tr className="border-b border-exit-border/50 text-left text-xs text-muted">
               <th className="px-4 py-3 font-medium">URL</th>
               <th className="px-4 py-3 font-medium">Type</th>
               <th className="px-4 py-3 font-medium">Status</th>
               <th className="px-4 py-3 font-medium">Coverage</th>
               <th className="px-4 py-3 font-medium">Laatst gecheckt</th>
-              <th className="px-4 py-3 font-medium">Laatst gepusht</th>
-              <th className="px-4 py-3 font-medium">Pushes</th>
+              <th className="px-4 py-3 font-medium">Laatste verzoek</th>
+              <th className="px-4 py-3 font-medium">Verzoeken</th>
             </tr>
           </thead>
           <tbody>
@@ -198,23 +198,23 @@ export function UrlTable({ urls, total, page, pageSize }: Props) {
                     {row.url.replace(/^https?:\/\/www\./, "")}
                   </a>
                 </td>
-                <td className="px-4 py-3 capitalize text-slate-500">
+                <td className="px-4 py-3 capitalize text-muted">
                   {row.url_type ?? "-"}
                 </td>
                 <td className="px-4 py-3">
                   <VerdictBadge verdict={row.verdict} />
                 </td>
-                <td className="px-4 py-3 text-xs text-slate-500" title={row.coverage_state ?? undefined}>
+                <td className="px-4 py-3 text-xs text-muted" title={row.coverage_state ?? undefined}>
                   {row.coverage_state
                     ? (COVERAGE_LABELS[row.coverage_state] ?? row.coverage_state)
                     : "-"}
                 </td>
-                <td className="px-4 py-3 text-xs text-slate-400">
+                <td className="px-4 py-3 text-xs text-muted">
                   {row.last_inspected
                     ? new Date(row.last_inspected).toLocaleDateString("nl-NL")
                     : "-"}
                 </td>
-                <td className="px-4 py-3 text-xs text-slate-400">
+                <td className="px-4 py-3 text-xs text-muted">
                   {row.last_pushed
                     ? new Date(row.last_pushed).toLocaleDateString("nl-NL")
                     : "-"}
@@ -226,7 +226,7 @@ export function UrlTable({ urls, total, page, pageSize }: Props) {
             ))}
             {urls.length === 0 && (
               <tr>
-                <td colSpan={7} className="px-4 py-8 text-center text-slate-400">
+                <td colSpan={7} className="px-4 py-8 text-center text-muted">
                   Geen URLs gevonden.
                 </td>
               </tr>
@@ -238,7 +238,7 @@ export function UrlTable({ urls, total, page, pageSize }: Props) {
       {/* Pagination */}
       {totalPages > 1 && (
         <div className="flex items-center justify-between border-t border-exit-border px-4 py-3">
-          <p className="text-xs text-slate-500 sm:text-sm">
+          <p className="text-xs text-muted sm:text-sm">
             Pagina {page} van {totalPages}
           </p>
           <div className="flex gap-2">

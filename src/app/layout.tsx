@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { NavTabs } from "@/components/nav-tabs";
 import { ServiceWorkerRegister } from "@/components/sw-register";
+import { ThemeToggle, ThemeInitScript } from "@/components/theme-toggle";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -51,6 +52,9 @@ export default function RootLayout({
       lang="nl"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
+      <head>
+        <ThemeInitScript />
+      </head>
       <body className="min-h-full bg-background font-sans">
         <header className="bg-exit-header sticky top-0 z-30 pt-[env(safe-area-inset-top)]">
           <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-2 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:px-6 sm:py-3">
@@ -75,7 +79,10 @@ export default function RootLayout({
                 </p>
               </div>
             </Link>
-            <NavTabs />
+            <div className="flex items-center gap-2">
+              <NavTabs />
+              <ThemeToggle />
+            </div>
           </div>
         </header>
         <main

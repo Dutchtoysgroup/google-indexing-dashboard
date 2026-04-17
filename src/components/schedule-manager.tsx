@@ -100,10 +100,10 @@ export function ScheduleManager({ initialSchedules, initialLog, recipient }: Pro
   return (
     <div className="space-y-6">
       {/* Recipient + test sectie */}
-      <section className="rounded-xl border border-exit-border bg-white p-5 shadow-sm">
+      <section className="rounded-xl border border-exit-border bg-card p-5 shadow-sm">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <p className="text-sm text-slate-500">Ontvanger (uit env var EMAIL_TO)</p>
+            <p className="text-sm text-muted">Ontvanger (uit env var EMAIL_TO)</p>
             <p className="mt-0.5 font-mono text-sm text-foreground">
               {recipient ?? <span className="text-red-500">⚠ Niet ingesteld</span>}
             </p>
@@ -125,19 +125,19 @@ export function ScheduleManager({ initialSchedules, initialLog, recipient }: Pro
       </section>
 
       {/* Form */}
-      <section className="rounded-xl border border-exit-border bg-white p-5 shadow-sm">
+      <section className="rounded-xl border border-exit-border bg-card p-5 shadow-sm">
         <h2 className="text-lg font-semibold text-foreground">Nieuwe schedule</h2>
         <form onSubmit={createScheduleHandler} className="mt-4 grid gap-4 sm:grid-cols-2">
           <div className="sm:col-span-2">
-            <label className="block text-xs font-medium text-slate-500">Naam</label>
+            <label className="block text-xs font-medium text-muted">Naam</label>
             <input
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="mt-1 w-full rounded-lg border border-exit-border bg-white px-3 py-2 text-sm focus:border-exit-green focus:outline-none focus:ring-1 focus:ring-exit-green"
+              className="mt-1 w-full rounded-lg border border-exit-border bg-card px-3 py-2 text-sm focus:border-exit-green focus:outline-none focus:ring-1 focus:ring-exit-green"
             />
           </div>
           <div>
-            <label className="block text-xs font-medium text-slate-500">
+            <label className="block text-xs font-medium text-muted">
               Tijd (uurresolutie — alleen het hele uur telt)
             </label>
             <input
@@ -145,11 +145,11 @@ export function ScheduleManager({ initialSchedules, initialLog, recipient }: Pro
               value={time}
               onChange={(e) => setTime(e.target.value)}
               step={3600}
-              className="mt-1 w-full rounded-lg border border-exit-border bg-white px-3 py-2 text-sm focus:border-exit-green focus:outline-none focus:ring-1 focus:ring-exit-green"
+              className="mt-1 w-full rounded-lg border border-exit-border bg-card px-3 py-2 text-sm focus:border-exit-green focus:outline-none focus:ring-1 focus:ring-exit-green"
             />
           </div>
           <div>
-            <label className="block text-xs font-medium text-slate-500">Snelle keuze</label>
+            <label className="block text-xs font-medium text-muted">Snelle keuze</label>
             <div className="mt-1 flex flex-wrap gap-2">
               {PRESETS.map((p) => (
                 <button
@@ -164,7 +164,7 @@ export function ScheduleManager({ initialSchedules, initialLog, recipient }: Pro
             </div>
           </div>
           <div className="sm:col-span-2">
-            <label className="block text-xs font-medium text-slate-500">Dagen</label>
+            <label className="block text-xs font-medium text-muted">Dagen</label>
             <div className="mt-2 flex flex-wrap gap-2">
               {DAY_LABELS.map((label, idx) => {
                 const dayNum = idx + 1; // 1=ma..7=zo
@@ -177,7 +177,7 @@ export function ScheduleManager({ initialSchedules, initialLog, recipient }: Pro
                     className={`h-9 w-12 rounded-lg border text-sm font-medium transition-colors ${
                       active
                         ? "border-exit-green bg-exit-green text-white"
-                        : "border-exit-border bg-white text-slate-500 hover:border-exit-green-200"
+                        : "border-exit-border bg-card text-muted hover:border-exit-green-200"
                     }`}
                   >
                     {label}
@@ -204,7 +204,7 @@ export function ScheduleManager({ initialSchedules, initialLog, recipient }: Pro
           Bestaande schedules ({schedules.length})
         </h2>
         {schedules.length === 0 ? (
-          <p className="rounded-xl border border-exit-border bg-white p-6 text-center text-sm text-slate-500">
+          <p className="rounded-xl border border-exit-border bg-card p-6 text-center text-sm text-muted">
             Nog geen schedules. Voeg er één toe hierboven.
           </p>
         ) : (
@@ -212,7 +212,7 @@ export function ScheduleManager({ initialSchedules, initialLog, recipient }: Pro
             {schedules.map((s) => (
               <li
                 key={s.id}
-                className="flex flex-col gap-3 rounded-xl border border-exit-border bg-white p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between"
+                className="flex flex-col gap-3 rounded-xl border border-exit-border bg-card p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between"
               >
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">
@@ -223,7 +223,7 @@ export function ScheduleManager({ initialSchedules, initialLog, recipient }: Pro
                     />
                     <p className="truncate font-medium text-foreground">{s.name}</p>
                   </div>
-                  <p className="mt-1 text-xs text-slate-500">
+                  <p className="mt-1 text-xs text-muted">
                     {s.time_of_day.slice(0, 5)} ·{" "}
                     {s.days_of_week.length === 7
                       ? "iedere dag"
@@ -238,13 +238,13 @@ export function ScheduleManager({ initialSchedules, initialLog, recipient }: Pro
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => toggleEnabled(s)}
-                    className="rounded-lg border border-exit-border bg-white px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:border-exit-green-200"
+                    className="rounded-lg border border-exit-border bg-card px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:border-exit-green-200"
                   >
                     {s.enabled ? "Pauzeer" : "Activeer"}
                   </button>
                   <button
                     onClick={() => deleteScheduleHandler(s)}
-                    className="rounded-lg border border-red-200 bg-white px-3 py-1.5 text-xs font-medium text-red-500 transition-colors hover:border-red-400 hover:bg-red-50"
+                    className="rounded-lg border border-red-200 bg-card px-3 py-1.5 text-xs font-medium text-red-500 transition-colors hover:border-red-400 hover:bg-red-50"
                   >
                     Verwijder
                   </button>
@@ -259,13 +259,13 @@ export function ScheduleManager({ initialSchedules, initialLog, recipient }: Pro
       <section>
         <h2 className="mb-3 text-lg font-semibold text-foreground">Recente verzendingen</h2>
         {log.length === 0 ? (
-          <p className="rounded-xl border border-exit-border bg-white p-6 text-center text-sm text-slate-500">
+          <p className="rounded-xl border border-exit-border bg-card p-6 text-center text-sm text-muted">
             Nog niets verzonden.
           </p>
         ) : (
-          <div className="overflow-hidden rounded-xl border border-exit-border bg-white shadow-sm">
+          <div className="overflow-hidden rounded-xl border border-exit-border bg-card shadow-sm">
             <table className="w-full text-sm">
-              <thead className="bg-exit-green-50 text-xs text-slate-500">
+              <thead className="bg-exit-green-50 text-xs text-muted">
                 <tr>
                   <th className="px-4 py-2 text-left font-medium">Tijd</th>
                   <th className="px-4 py-2 text-left font-medium">Onderwerp</th>
@@ -275,7 +275,7 @@ export function ScheduleManager({ initialSchedules, initialLog, recipient }: Pro
               <tbody>
                 {log.map((entry) => (
                   <tr key={entry.id} className="border-t border-exit-border">
-                    <td className="px-4 py-2 text-slate-500">
+                    <td className="px-4 py-2 text-muted">
                       {new Date(entry.sent_at).toLocaleString("nl-NL")}
                     </td>
                     <td className="px-4 py-2 text-foreground">{entry.subject}</td>

@@ -14,7 +14,7 @@ function ApiTypeBadge({ type }: { type: string }) {
   if (type === "indexing") {
     return (
       <span className="inline-flex items-center rounded-full bg-exit-green-100 px-2 py-0.5 text-xs font-medium text-exit-green-dark">
-        Push
+        Verzoek
       </span>
     );
   }
@@ -28,15 +28,15 @@ function ApiTypeBadge({ type }: { type: string }) {
 export function ActivityFeed({ entries }: Props) {
   if (entries.length === 0) {
     return (
-      <div className="rounded-xl border border-exit-border bg-white p-6 shadow-sm">
+      <div className="rounded-xl border border-exit-border bg-card p-6 shadow-sm">
         <h3 className="mb-4 text-lg font-semibold text-foreground">Recente activiteit</h3>
-        <p className="text-sm text-slate-400">Nog geen API activiteit gelogd.</p>
+        <p className="text-sm text-muted">Nog geen API activiteit gelogd.</p>
       </div>
     );
   }
 
   return (
-    <div className="rounded-xl border border-exit-border bg-white p-6 shadow-sm">
+    <div className="rounded-xl border border-exit-border bg-card p-6 shadow-sm">
       <h3 className="mb-4 text-lg font-semibold text-foreground">Recente activiteit</h3>
       <div className="max-h-[380px] space-y-1.5 overflow-y-auto scrollbar-thin pr-1">
         {entries.map((entry) => {
@@ -46,11 +46,11 @@ export function ActivityFeed({ entries }: Props) {
               key={entry.id}
               className="flex items-center gap-2 rounded-lg border border-exit-border/50 px-3 py-2 transition-colors duration-150 hover:bg-exit-green-50"
             >
-              <span className="shrink-0 text-xs text-slate-400 tabular-nums">
+              <span className="shrink-0 text-xs text-muted tabular-nums">
                 {formatDate(entry.date)}
               </span>
               <span className="shrink-0 text-sm">{info?.flag ?? "🌍"}</span>
-              <span className="min-w-0 truncate text-sm font-medium text-slate-700">
+              <span className="min-w-0 truncate text-sm font-medium text-foreground">
                 {info?.name ?? entry.shop_id}
               </span>
               <ApiTypeBadge type={entry.api_type} />

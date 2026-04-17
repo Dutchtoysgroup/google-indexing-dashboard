@@ -66,7 +66,7 @@ export function EmailTemplate({ report, baseUrl, scheduleName }: TemplateProps) 
     <Html lang="nl">
       <Head />
       <Preview>
-        Ochtendrapport indexing — {fmt(report.totals.inspections_since)} inspecties, {fmt(report.totals.pushes_since)} pushes, {deltaLabel(report.totals.indexed_delta)} indexed
+        Ochtendrapport indexing — {fmt(report.totals.inspections_since)} inspecties, {fmt(report.totals.pushes_since)} indexeringsverzoeken, {deltaLabel(report.totals.indexed_delta)} indexed
       </Preview>
       <Body style={{ backgroundColor: c.background, margin: 0, padding: 0, fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" }}>
         <Container style={{ maxWidth: "640px", margin: "0 auto", padding: "0" }}>
@@ -107,7 +107,7 @@ export function EmailTemplate({ report, baseUrl, scheduleName }: TemplateProps) 
           <Section style={{ backgroundColor: c.card, padding: "0 24px 16px 24px", borderLeft: `1px solid ${c.border}`, borderRight: `1px solid ${c.border}` }}>
             <Row>
               <StatCard label="Inspecties" value={fmt(report.totals.inspections_since)} accent={c.primary} />
-              <StatCard label="Push calls" value={fmt(report.totals.pushes_since)} accent={c.primary} />
+              <StatCard label="Indexeringsverzoeken" value={fmt(report.totals.pushes_since)} accent={c.primary} />
               <StatCard label="Δ indexed" value={deltaLabel(report.totals.indexed_delta)} accent={deltaColor(report.totals.indexed_delta)} />
             </Row>
             <Row style={{ marginTop: "12px" }}>
@@ -127,7 +127,7 @@ export function EmailTemplate({ report, baseUrl, scheduleName }: TemplateProps) 
                 <tr style={{ borderBottom: `1px solid ${c.border}`, color: c.muted }}>
                   <th style={{ textAlign: "left", padding: "8px 0", fontWeight: 500 }}>Shop</th>
                   <th style={{ textAlign: "right", padding: "8px 0", fontWeight: 500 }}>Inspecties</th>
-                  <th style={{ textAlign: "right", padding: "8px 0", fontWeight: 500 }}>Pushes</th>
+                  <th style={{ textAlign: "right", padding: "8px 0", fontWeight: 500 }}>Verzoeken</th>
                   <th style={{ textAlign: "right", padding: "8px 0", fontWeight: 500 }}>Δ indexed</th>
                   <th style={{ textAlign: "right", padding: "8px 0", fontWeight: 500 }}>Coverage</th>
                 </tr>
@@ -171,11 +171,11 @@ export function EmailTemplate({ report, baseUrl, scheduleName }: TemplateProps) 
             </Section>
           )}
 
-          {/* Recent gepushte URLs */}
+          {/* Recent ingediende URLs */}
           {report.recentPushes.length > 0 && (
             <Section style={{ backgroundColor: c.card, padding: "0 24px 24px 24px", borderLeft: `1px solid ${c.border}`, borderRight: `1px solid ${c.border}` }}>
               <Heading as="h2" style={{ color: c.text, fontSize: "16px", fontWeight: 600, margin: "8px 0 12px 0" }}>
-                Recent gepushte URLs
+                Recent ingediende URLs
               </Heading>
               {report.recentPushes.map((u, idx) => (
                 <div key={idx} style={{ padding: "6px 0", borderBottom: `1px solid ${c.accent50}` }}>
