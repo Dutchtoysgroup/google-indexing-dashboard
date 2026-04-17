@@ -98,14 +98,48 @@ export function QuickTrigger({ initialRun, initialError, configured }: Props) {
 
   return (
     <div className="space-y-3">
+      {/* Uitleg: alleen voor noodgevallen */}
+      <div className="rounded-xl border border-yellow-300 bg-yellow-50 p-4">
+        <div className="flex items-start gap-3">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="mt-0.5 shrink-0 text-yellow-700"
+          >
+            <path d="M12 9v4" />
+            <path d="M12 17h.01" />
+            <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z" />
+          </svg>
+          <div className="min-w-0 flex-1">
+            <p className="text-sm font-medium text-yellow-900">Alleen voor noodgevallen</p>
+            <p className="mt-1 text-xs text-yellow-900/80 leading-relaxed">
+              De pipeline draait normaal automatisch dagelijks om 04:00 (NL tijd) op de
+              Mac Mini. Deze knop start een extra run op GitHub Actions — gebruik het
+              alleen als er iets echt mis is gegaan met de dagelijkse run, bij een
+              urgente her-indexering, of als smoke-test na een grote code-wijziging.
+              Het vreet GitHub Actions-minuten en deelt Google&apos;s dagelijkse
+              push-quota met de gewone run.
+            </p>
+          </div>
+        </div>
+      </div>
+
       <div className="rounded-xl border border-exit-border bg-card p-5 shadow-sm">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div className="min-w-0 flex-1">
             <p className="text-sm font-medium text-foreground">Handmatige pipeline-run</p>
             <p className="mt-1 text-xs text-muted leading-relaxed">
-              Start nu een pipeline-run via GitHub Actions. Duurt max 40 min. Gebruikt de
-              huidige defaults uit <code className="font-mono">config/settings.py</code>{" "}
-              (15 inspecties per shop). Je kan deze knop gebruiken als smoke-test.
+              Start een run via GitHub Actions. Op Actions geldt een tijdsbudget van
+              30 min voor crawl + inspect; push en snapshot lopen daarna altijd door
+              tot Google&apos;s dagelijkse limiet (200 verzoeken) is bereikt. Job
+              timeout: 40 min.
             </p>
           </div>
           <button
