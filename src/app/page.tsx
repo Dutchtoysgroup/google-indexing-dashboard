@@ -6,6 +6,7 @@ import {
   getApiLog,
   getCoverageStateBreakdown,
   getApiUsageByShop,
+  getLastRunEndedAt,
 } from "@/lib/db";
 import { StatsOverview } from "@/components/stats-overview";
 import { ShopCard } from "@/components/shop-card";
@@ -30,9 +31,10 @@ export default async function HomePage() {
   let recentActivity;
   let coverageStates;
   let apiUsageByShop;
+  let lastRunEndedAt;
 
   try {
-    [shops, snapshots, todayUsage, apiDailySummary, recentActivity, coverageStates, apiUsageByShop] =
+    [shops, snapshots, todayUsage, apiDailySummary, recentActivity, coverageStates, apiUsageByShop, lastRunEndedAt] =
       await Promise.all([
         getAllShopsSummary(),
         getAllSnapshots(30),
@@ -41,6 +43,7 @@ export default async function HomePage() {
         getApiLog(14),
         getCoverageStateBreakdown(),
         getApiUsageByShop(30),
+        getLastRunEndedAt(),
       ]);
   } catch (e) {
     const msg = e instanceof Error ? e.message : String(e);
@@ -84,18 +87,22 @@ export default async function HomePage() {
     { indexed: 0, notIndexed: 0, notChecked: 0 }
   );
 
-  const lastUpdated = new Date().toLocaleString("nl-NL", {
-    timeZone: "Europe/Amsterdam",
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+  const lastRunLabel = lastRunEndedAt
+    ? new Date(lastRunEndedAt).toLocaleString("nl-NL", {
+        timeZone: "Europe/Amsterdam",
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      })
+    : null;
 
   return (
     <div className="space-y-8">
-      <p className="text-xs text-muted">Laatste update: {lastUpdated}</p>
+      <p className="text-xs text-muted">
+        Laatste update: {lastRunLabel ?? "nog geen run"}
+      </p>
 
       {/* Section 1: Overview stats */}
       <StatsOverview shops={shops} snapshots={snapshots} />

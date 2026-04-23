@@ -197,6 +197,15 @@ export async function getTodayApiUsage(): Promise<TodayUsage> {
   return (rows[0] as TodayUsage) ?? { indexing_today: 0, inspection_today: 0, indexing_week: 0, indexing_month: 0 };
 }
 
+export async function getLastRunEndedAt(): Promise<string | null> {
+  const sql = getDb();
+  const rows = await sql`
+    SELECT MAX(created_at)::text as last_run
+    FROM api_log
+  `;
+  return (rows[0] as { last_run: string | null })?.last_run ?? null;
+}
+
 export async function getRecentlyPushedUrls(shopId: string, limit: number = 10): Promise<UrlRow[]> {
   const sql = getDb();
   const rows = await sql`
