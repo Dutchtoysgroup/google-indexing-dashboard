@@ -84,8 +84,19 @@ export default async function HomePage() {
     { indexed: 0, notIndexed: 0, notChecked: 0 }
   );
 
+  const lastUpdated = new Date().toLocaleString("nl-NL", {
+    timeZone: "Europe/Amsterdam",
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+
   return (
     <div className="space-y-8">
+      <p className="text-xs text-muted">Laatste update: {lastUpdated}</p>
+
       {/* Section 1: Overview stats */}
       <StatsOverview shops={shops} snapshots={snapshots} />
 
