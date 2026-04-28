@@ -25,7 +25,7 @@ function statusLabel(run: WorkflowRun): { text: string; color: string } {
     if (run.conclusion === "cancelled") return { text: "Geannuleerd", color: "text-muted" };
     return { text: run.conclusion ?? "Voltooid", color: "text-muted" };
   }
-  if (run.status === "in_progress") return { text: "Bezig", color: "text-exit-green" };
+  if (run.status === "in_progress") return { text: "Bezig", color: "text-brand-green" };
   if (run.status === "queued") return { text: "In de wachtrij", color: "text-yellow-600" };
   return { text: run.status, color: "text-muted" };
 }
@@ -72,21 +72,21 @@ export function QuickTrigger({ initialRun, initialError, configured }: Props) {
 
   if (!configured) {
     return (
-      <div className="rounded-xl border border-exit-border bg-card p-5 shadow-sm">
+      <div className="rounded-xl border border-brand-border bg-card p-5 shadow-sm">
         <div className="flex items-start gap-3">
           <div className="mt-0.5 h-2 w-2 shrink-0 rounded-full bg-yellow-500" />
           <div className="min-w-0 flex-1">
             <p className="text-sm font-medium text-foreground">Nog niet geconfigureerd</p>
             <p className="mt-1 text-xs text-muted leading-relaxed">
-              Zet de env vars <code className="rounded bg-exit-green-50 px-1 py-0.5 font-mono text-[11px]">GITHUB_PAT</code> en{" "}
-              <code className="rounded bg-exit-green-50 px-1 py-0.5 font-mono text-[11px]">GITHUB_TRIGGER_REPO</code>{" "}
-              (bijv. <code className="font-mono">svendijk2408/google-indexing-tool</code>) op Vercel en redeploy.
-              Zie de handleiding in CLAUDE.md of vraag Claude om de stappen.
+              Zet de env vars <code className="rounded bg-brand-green-50 px-1 py-0.5 font-mono text-[11px]">GITHUB_PAT</code> en{" "}
+              <code className="rounded bg-brand-green-50 px-1 py-0.5 font-mono text-[11px]">GITHUB_TRIGGER_REPO</code>{" "}
+              (formaat <code className="font-mono">eigenaar/repo-naam</code>) op Vercel en redeploy.
+              Zie de README voor de volledige handleiding.
             </p>
             <button
               type="button"
               disabled
-              className="mt-3 rounded-lg bg-exit-green px-4 py-2 text-sm font-medium text-white shadow-sm opacity-50 cursor-not-allowed"
+              className="mt-3 rounded-lg bg-brand-green px-4 py-2 text-sm font-medium text-white shadow-sm opacity-50 cursor-not-allowed"
             >
               Start beperkte run
             </button>
@@ -131,7 +131,7 @@ export function QuickTrigger({ initialRun, initialError, configured }: Props) {
         </div>
       </div>
 
-      <div className="rounded-xl border border-exit-border bg-card p-5 shadow-sm">
+      <div className="rounded-xl border border-brand-border bg-card p-5 shadow-sm">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div className="min-w-0 flex-1">
             <p className="text-sm font-medium text-foreground">Handmatige pipeline-run</p>
@@ -146,7 +146,7 @@ export function QuickTrigger({ initialRun, initialError, configured }: Props) {
             type="button"
             onClick={onTrigger}
             disabled={pending || Boolean(isActive)}
-            className="shrink-0 rounded-lg bg-exit-green px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-exit-green-dark disabled:cursor-not-allowed disabled:opacity-50"
+            className="shrink-0 rounded-lg bg-brand-green px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-brand-green-dark disabled:cursor-not-allowed disabled:opacity-50"
           >
             {pending ? "Starten…" : isActive ? "Al bezig…" : "Start nu"}
           </button>
@@ -156,7 +156,7 @@ export function QuickTrigger({ initialRun, initialError, configured }: Props) {
       </div>
 
       {run && (
-        <div className="rounded-xl border border-exit-border bg-card p-5 shadow-sm">
+        <div className="rounded-xl border border-brand-border bg-card p-5 shadow-sm">
           <div className="flex items-center justify-between gap-3">
             <div className="min-w-0 flex-1">
               <p className="text-sm font-medium text-foreground">Laatste run #{run.run_number}</p>
@@ -176,7 +176,7 @@ export function QuickTrigger({ initialRun, initialError, configured }: Props) {
             href={run.html_url}
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-3 inline-block text-xs text-exit-green hover:underline"
+            className="mt-3 inline-block text-xs text-brand-green hover:underline"
           >
             Bekijk logs op GitHub →
           </a>

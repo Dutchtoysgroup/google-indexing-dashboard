@@ -13,14 +13,14 @@ export default async function UitschrijvenPage({ searchParams }: Props) {
   if (!token) {
     return (
       <div className="mx-auto max-w-xl py-8">
-        <div className="rounded-xl border border-exit-border bg-card p-8 text-center shadow-sm">
+        <div className="rounded-xl border border-brand-border bg-card p-8 text-center shadow-sm">
           <h1 className="text-xl font-semibold text-foreground">Geen token meegegeven</h1>
           <p className="mt-2 text-sm text-muted">
             Deze link is niet volledig. Gebruik de uitschrijf-link uit de e-mail die je hebt ontvangen.
           </p>
           <Link
             href="/"
-            className="mt-6 inline-block rounded-lg bg-exit-green px-4 py-2 text-sm font-medium text-white hover:bg-exit-green-dark"
+            className="mt-6 inline-block rounded-lg bg-brand-green px-4 py-2 text-sm font-medium text-white hover:bg-brand-green-dark"
           >
             Terug naar dashboard
           </Link>
@@ -35,14 +35,14 @@ export default async function UitschrijvenPage({ searchParams }: Props) {
   if (!existing) {
     return (
       <div className="mx-auto max-w-xl py-8">
-        <div className="rounded-xl border border-exit-border bg-card p-8 text-center shadow-sm">
+        <div className="rounded-xl border border-brand-border bg-card p-8 text-center shadow-sm">
           <h1 className="text-xl font-semibold text-foreground">Link ongeldig</h1>
           <p className="mt-2 text-sm text-muted">
             We konden geen abonnement vinden bij deze uitschrijf-link. Mogelijk is het al verwijderd.
           </p>
           <Link
             href="/"
-            className="mt-6 inline-block rounded-lg bg-exit-green px-4 py-2 text-sm font-medium text-white hover:bg-exit-green-dark"
+            className="mt-6 inline-block rounded-lg bg-brand-green px-4 py-2 text-sm font-medium text-white hover:bg-brand-green-dark"
           >
             Terug naar dashboard
           </Link>
@@ -57,8 +57,8 @@ export default async function UitschrijvenPage({ searchParams }: Props) {
 
   return (
     <div className="mx-auto max-w-xl py-8">
-      <div className="rounded-xl border border-exit-border bg-card p-8 text-center shadow-sm">
-        <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-exit-green-50">
+      <div className="rounded-xl border border-brand-border bg-card p-8 text-center shadow-sm">
+        <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-brand-green-50">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="24"
@@ -69,7 +69,7 @@ export default async function UitschrijvenPage({ searchParams }: Props) {
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
-            className="text-exit-green"
+            className="text-brand-green"
           >
             <path d="M20 6 9 17l-5-5" />
           </svg>
@@ -87,7 +87,7 @@ export default async function UitschrijvenPage({ searchParams }: Props) {
         </p>
         <Link
           href="/"
-          className="mt-6 inline-block rounded-lg bg-exit-green px-4 py-2 text-sm font-medium text-white hover:bg-exit-green-dark"
+          className="mt-6 inline-block rounded-lg bg-brand-green px-4 py-2 text-sm font-medium text-white hover:bg-brand-green-dark"
         >
           Terug naar dashboard
         </Link>

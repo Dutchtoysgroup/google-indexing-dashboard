@@ -8,23 +8,23 @@ export default function UitlegPage() {
       <div>
         <h1 className="text-2xl font-bold text-foreground">Uitleg</h1>
         <p className="mt-1 text-muted">
-          Hoe het EXIT Toys Indexing Dashboard werkt en wat de cijfers betekenen.
+          Hoe het Indexing Dashboard werkt en wat de cijfers betekenen.
         </p>
       </div>
 
       {/* Wat doet deze tool? */}
-      <section className="rounded-xl border border-exit-border bg-card p-6 shadow-sm">
+      <section className="rounded-xl border border-brand-border bg-card p-6 shadow-sm">
         <h2 className="text-lg font-semibold text-foreground mb-3">Wat doet deze tool?</h2>
         <p className="text-sm text-foreground leading-relaxed">
-          Het Indexing Dashboard monitort de Google-indexeringsstatus van alle EXIT Toys webshops.
-          Het controleert automatisch of productpagina&apos;s, collectiepagina&apos;s en andere URLs
-          zijn opgenomen in de Google zoekindex. URLs die niet geindexeerd zijn, worden automatisch
-          aangemeld bij Google via de Indexing API.
+          Het Indexing Dashboard monitort de Google-indexeringsstatus van alle webshops die je
+          hebt geconfigureerd. Het controleert automatisch of productpagina&apos;s,
+          collectiepagina&apos;s en andere URLs zijn opgenomen in de Google zoekindex. URLs die
+          niet geïndexeerd zijn, worden automatisch aangemeld bij Google via de Indexing API.
         </p>
       </section>
 
       {/* Hoe werkt het? */}
-      <section className="rounded-xl border border-exit-border bg-card p-6 shadow-sm">
+      <section className="rounded-xl border border-brand-border bg-card p-6 shadow-sm">
         <h2 className="text-lg font-semibold text-foreground mb-4">Hoe werkt het?</h2>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {[
@@ -49,8 +49,8 @@ export default function UitlegPage() {
               desc: "Dagelijks worden de statistieken opgeslagen zodat trends over tijd zichtbaar worden in het dashboard.",
             },
           ].map((item) => (
-            <div key={item.step} className="rounded-lg border border-exit-border/50 p-4">
-              <div className="mb-2 flex h-8 w-8 items-center justify-center rounded-full bg-exit-green text-sm font-bold text-white">
+            <div key={item.step} className="rounded-lg border border-brand-border/50 p-4">
+              <div className="mb-2 flex h-8 w-8 items-center justify-center rounded-full bg-brand-green text-sm font-bold text-white">
                 {item.step}
               </div>
               <h3 className="font-medium text-foreground">{item.title}</h3>
@@ -58,16 +58,17 @@ export default function UitlegPage() {
             </div>
           ))}
         </div>
-        <div className="mt-4 rounded-lg bg-exit-green-50 p-4">
-          <p className="text-sm text-exit-green-dark">
-            <strong>Automatisch:</strong> De pipeline draait dagelijks om 04:00 (NL tijd) via een launchd cron-job op de Mac Mini.
+        <div className="mt-4 rounded-lg bg-brand-green-50 p-4">
+          <p className="text-sm text-brand-green-dark">
+            <strong>Automatisch:</strong> De pipeline draait dagelijks via een geplande job
+            (bijvoorbeeld een launchd cron op een eigen server, of een GitHub Actions schedule).
             Bij nieuwe producten of wijzigingen worden URLs automatisch opgepikt bij de volgende run.
           </p>
         </div>
       </section>
 
       {/* Wat betekenen de cijfers? */}
-      <section className="rounded-xl border border-exit-border bg-card p-6 shadow-sm">
+      <section className="rounded-xl border border-brand-border bg-card p-6 shadow-sm">
         <h2 className="text-lg font-semibold text-foreground mb-4">Wat betekenen de cijfers?</h2>
         <div className="space-y-3">
           {[
@@ -94,10 +95,10 @@ export default function UitlegPage() {
             {
               label: "Coverage",
               desc: "Percentage geindexeerde URLs ten opzichte van het totaal. Hoe hoger, hoe beter vindbaar de shop is.",
-              color: "bg-exit-green",
+              color: "bg-brand-green",
             },
           ].map((item) => (
-            <div key={item.label} className="flex items-start gap-3 rounded-lg border border-exit-border/30 p-3">
+            <div key={item.label} className="flex items-start gap-3 rounded-lg border border-brand-border/30 p-3">
               <div className={`mt-1 h-3 w-3 flex-shrink-0 rounded-full ${item.color}`} />
               <div>
                 <h3 className="text-sm font-medium text-foreground">{item.label}</h3>
@@ -109,12 +110,12 @@ export default function UitlegPage() {
       </section>
 
       {/* API Limieten */}
-      <section className="rounded-xl border border-exit-border bg-card p-6 shadow-sm">
+      <section className="rounded-xl border border-brand-border bg-card p-6 shadow-sm">
         <h2 className="text-lg font-semibold text-foreground mb-4">API Limieten</h2>
         <div className="grid gap-4 sm:grid-cols-2">
-          <div className="rounded-lg bg-exit-green-50 p-4">
-            <h3 className="font-medium text-exit-green-dark">Indexing API (Indexeringsverzoeken)</h3>
-            <p className="mt-1 text-2xl font-bold text-exit-green">200 / dag</p>
+          <div className="rounded-lg bg-brand-green-50 p-4">
+            <h3 className="font-medium text-brand-green-dark">Indexing API (Indexeringsverzoeken)</h3>
+            <p className="mt-1 text-2xl font-bold text-brand-green">200 / dag</p>
             <p className="mt-1 text-xs text-muted">Totaal over alle shops. Reset om middernacht Pacific Time (09:00 NL).</p>
           </div>
           <div className="rounded-lg bg-blue-50 p-4">
@@ -126,11 +127,11 @@ export default function UitlegPage() {
       </section>
 
       {/* Webshops */}
-      <section className="rounded-xl border border-exit-border bg-card p-6 shadow-sm">
+      <section className="rounded-xl border border-brand-border bg-card p-6 shadow-sm">
         <h2 className="text-lg font-semibold text-foreground mb-4">Webshops ({shops.length})</h2>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {shops.map(([id, info]) => (
-            <div key={id} className="flex items-center gap-3 rounded-lg border border-exit-border/50 p-3">
+            <div key={id} className="flex items-center gap-3 rounded-lg border border-brand-border/50 p-3">
               <span className="text-xl">{info.flag}</span>
               <div>
                 <p className="text-sm font-medium text-foreground">{info.name}</p>
@@ -142,7 +143,7 @@ export default function UitlegPage() {
       </section>
 
       {/* FAQ */}
-      <section className="rounded-xl border border-exit-border bg-card p-6 shadow-sm">
+      <section className="rounded-xl border border-brand-border bg-card p-6 shadow-sm">
         <h2 className="text-lg font-semibold text-foreground mb-4">Veelgestelde vragen</h2>
         <div className="space-y-4">
           {[
@@ -164,10 +165,10 @@ export default function UitlegPage() {
             },
             {
               q: "Hoe vaak wordt de data ververst?",
-              a: "De pipeline draait dagelijks om 04:00 (NL tijd) via een launchd cron-job op de Mac Mini. Het dashboard toont altijd de meest recente data bij elk bezoek.",
+              a: "De pipeline draait dagelijks volgens het schema dat je zelf instelt (bijv. een launchd cron op een server, of een GitHub Actions schedule). Het dashboard toont altijd de meest recente data bij elk bezoek.",
             },
           ].map((faq) => (
-            <div key={faq.q} className="rounded-lg border border-exit-border/30 p-4">
+            <div key={faq.q} className="rounded-lg border border-brand-border/30 p-4">
               <h3 className="text-sm font-medium text-foreground">{faq.q}</h3>
               <p className="mt-2 text-xs text-muted leading-relaxed">{faq.a}</p>
             </div>

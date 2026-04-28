@@ -68,7 +68,7 @@ export default async function HomePage() {
         <h2 className="text-xl font-semibold text-foreground">Nog geen data</h2>
         <p className="mt-2 text-muted">
           Voer eerst{" "}
-          <code className="rounded bg-exit-green-50 px-2 py-0.5 text-sm">
+          <code className="rounded bg-brand-green-50 px-2 py-0.5 text-sm">
             python cli.py scan
           </code>{" "}
           uit om URLs te verzamelen.

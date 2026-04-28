@@ -42,7 +42,11 @@ export async function GET(req: Request) {
       }
 
       const report = await buildReport(since);
-      const subject = `[EXIT Indexing] ${sched.name} — ${report.totals.inspections_since} inspecties, ${report.totals.pushes_since} indexeringsverzoeken`;
+      const brandShort =
+        process.env.NEXT_PUBLIC_BRAND_SHORT ||
+        process.env.NEXT_PUBLIC_BRAND_NAME ||
+        "Indexing";
+      const subject = `[${brandShort} Indexing] ${sched.name} — ${report.totals.inspections_since} inspecties, ${report.totals.pushes_since} indexeringsverzoeken`;
 
       for (const sub of subscribers) {
         const unsubscribeUrl = `${baseUrl}/uitschrijven?token=${encodeURIComponent(sub.unsubscribe_token)}`;

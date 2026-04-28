@@ -1,13 +1,14 @@
 @import "tailwindcss";
 
 :root {
-  /* EXIT Toys brand */
-  --exit-green: #6B8E23;
-  --exit-green-light: #8AAD3A;
-  --exit-green-dark: #4A6318;
-  --exit-green-50: #F4F7EC;
-  --exit-green-100: #E3ECCC;
-  --exit-green-200: #C8D99A;
+  /* Brand kleuren — pas deze aan om de huisstijl van je merk over te nemen.
+     De variabelen worden via Tailwind als bg-brand-green / text-brand-green / etc. gebruikt. */
+  --brand-green: #6B8E23;
+  --brand-green-light: #8AAD3A;
+  --brand-green-dark: #4A6318;
+  --brand-green-50: #F4F7EC;
+  --brand-green-100: #E3ECCC;
+  --brand-green-200: #C8D99A;
 
   /* Surfaces */
   --background: #F8FAF5;
@@ -27,12 +28,12 @@
 }
 
 [data-theme="dark"] {
-  --exit-green: #8AAD3A;
-  --exit-green-light: #A8C85A;
-  --exit-green-dark: #C8D99A;
-  --exit-green-50: #1F2A14;
-  --exit-green-100: #2F3F1C;
-  --exit-green-200: #4A6318;
+  --brand-green: #8AAD3A;
+  --brand-green-light: #A8C85A;
+  --brand-green-dark: #C8D99A;
+  --brand-green-50: #1F2A14;
+  --brand-green-100: #2F3F1C;
+  --brand-green-200: #4A6318;
 
   --background: #0F1608;
   --foreground: #E8EECC;
@@ -49,14 +50,14 @@
   --color-foreground: var(--foreground);
   --color-card: var(--card);
   --color-muted: var(--muted);
-  --color-exit-green: var(--exit-green);
-  --color-exit-green-light: var(--exit-green-light);
-  --color-exit-green-dark: var(--exit-green-dark);
-  --color-exit-green-50: var(--exit-green-50);
-  --color-exit-green-100: var(--exit-green-100);
-  --color-exit-green-200: var(--exit-green-200);
-  --color-exit-border: var(--border);
-  --color-exit-header: var(--header-bg);
+  --color-brand-green: var(--brand-green);
+  --color-brand-green-light: var(--brand-green-light);
+  --color-brand-green-dark: var(--brand-green-dark);
+  --color-brand-green-50: var(--brand-green-50);
+  --color-brand-green-100: var(--brand-green-100);
+  --color-brand-green-200: var(--brand-green-200);
+  --color-brand-border: var(--border);
+  --color-brand-header: var(--header-bg);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
@@ -74,7 +75,7 @@ body {
   background: transparent;
 }
 .scrollbar-thin::-webkit-scrollbar-thumb {
-  background: var(--exit-green-200);
+  background: var(--brand-green-200);
   border-radius: 2px;
 }
 

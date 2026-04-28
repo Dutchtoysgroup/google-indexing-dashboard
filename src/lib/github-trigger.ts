@@ -7,12 +7,17 @@ export type GithubConfig = {
 
 function getConfig(): GithubConfig {
   const token = process.env.GITHUB_PAT;
-  const repo = process.env.GITHUB_TRIGGER_REPO ?? "svendijk2408/google-indexing-tool";
+  const repo = process.env.GITHUB_TRIGGER_REPO;
   const workflowFile = process.env.GITHUB_TRIGGER_WORKFLOW ?? "daily-indexing.yml";
   const ref = process.env.GITHUB_TRIGGER_REF ?? "main";
   if (!token) {
     throw new Error(
-      "GITHUB_PAT env var ontbreekt. Voeg een fine-grained personal access token toe met Actions:write op de pipeline-repo."
+      "GITHUB_PAT env var ontbreekt. Voeg een fine-grained personal access token toe met Actions:write op de pipeline-repo.",
+    );
+  }
+  if (!repo) {
+    throw new Error(
+      "GITHUB_TRIGGER_REPO env var ontbreekt. Zet deze op 'eigenaar/repo-naam' van de pipeline-repo (bijv. 'mijnorg/indexing-pipeline').",
     );
   }
   return { token, repo, workflowFile, ref };

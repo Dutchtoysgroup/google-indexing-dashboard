@@ -13,7 +13,7 @@ export function PushStats({ usage, dailyLimit = 200 }: Props) {
     ? Math.min(100, (usage.indexing_today / dailyLimit) * 100)
     : 0;
 
-  let barColor = "bg-exit-green";
+  let barColor = "bg-brand-green";
   if (usagePercent >= 90) barColor = "bg-red-500";
   else if (usagePercent >= 70) barColor = "bg-yellow-500";
 
@@ -21,9 +21,9 @@ export function PushStats({ usage, dailyLimit = 200 }: Props) {
     {
       label: "Verzoeken vandaag",
       value: `${usage.indexing_today} / ${dailyLimit}`,
-      color: "text-exit-green",
+      color: "text-brand-green",
       sub: (
-        <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-exit-green-50">
+        <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-brand-green-50">
           <div
             className={`h-full rounded-full ${barColor} transition-all duration-700`}
             style={{ width: `${usagePercent}%` }}
@@ -39,12 +39,12 @@ export function PushStats({ usage, dailyLimit = 200 }: Props) {
     {
       label: "Verzoeken deze week",
       value: usage.indexing_week.toLocaleString("nl-NL"),
-      color: "text-exit-green",
+      color: "text-brand-green",
     },
     {
       label: "Verzoeken deze maand",
       value: usage.indexing_month.toLocaleString("nl-NL"),
-      color: "text-exit-green",
+      color: "text-brand-green",
     },
   ];
 
@@ -52,7 +52,7 @@ export function PushStats({ usage, dailyLimit = 200 }: Props) {
     <StaggerContainer className="grid grid-cols-2 gap-4 sm:grid-cols-4">
       {stats.map((stat) => (
         <StaggerItem key={stat.label}>
-          <div className="rounded-xl border border-exit-border bg-card p-4 shadow-sm transition-all duration-200 hover:border-exit-green-200">
+          <div className="rounded-xl border border-brand-border bg-card p-4 shadow-sm transition-all duration-200 hover:border-brand-green-200">
             <p className="text-sm text-muted">{stat.label}</p>
             <p className={`mt-1 text-2xl font-semibold ${stat.color}`}>
               {stat.value}

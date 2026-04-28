@@ -21,7 +21,7 @@ type Props = {
 export function ApiUsageByShopChart({ data }: Props) {
   if (data.length === 0) {
     return (
-      <div className="rounded-xl border border-exit-border bg-card p-6 shadow-sm">
+      <div className="rounded-xl border border-brand-border bg-card p-6 shadow-sm">
         <h3 className="mb-4 text-lg font-semibold text-foreground">API Gebruik per Shop</h3>
         <p className="text-sm text-muted">Geen data beschikbaar.</p>
       </div>
@@ -39,7 +39,7 @@ export function ApiUsageByShopChart({ data }: Props) {
   });
 
   return (
-    <div className="rounded-xl border border-exit-border bg-card p-6 shadow-sm">
+    <div className="rounded-xl border border-brand-border bg-card p-6 shadow-sm">
       <h3 className="mb-4 text-lg font-semibold text-foreground">API Gebruik per Shop</h3>
       <ResponsiveContainer width="100%" height={300}>
         <BarChart data={chartData}>

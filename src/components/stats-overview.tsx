@@ -45,7 +45,7 @@ export function StatsOverview({ shops, snapshots = [] }: Props) {
     { label: "Geindexeerd", value: totals.indexed.toLocaleString("nl-NL"), color: "text-green-600", key: "indexed" },
     { label: "Niet geindexeerd", value: totals.notIndexed.toLocaleString("nl-NL"), color: "text-red-500", key: "notIndexed" },
     { label: "Niet gecheckt", value: totals.unknown.toLocaleString("nl-NL"), color: "text-yellow-600", key: "unknown" },
-    { label: "Coverage", value: `${coverage}%`, color: "text-exit-green", key: "coverage" },
+    { label: "Coverage", value: `${coverage}%`, color: "text-brand-green", key: "coverage" },
   ];
 
   const trendData = snapshots.map((d) => ({
@@ -129,8 +129,8 @@ export function StatsOverview({ shops, snapshots = [] }: Props) {
               onClick={() => setExpanded(expanded === stat.key ? null : stat.key)}
               className={`cursor-pointer rounded-xl border bg-card p-4 shadow-sm transition-all duration-200 hover:shadow-md ${
                 expanded === stat.key
-                  ? "border-exit-green ring-1 ring-exit-green/30"
-                  : "border-exit-border hover:border-exit-green-200"
+                  ? "border-brand-green ring-1 ring-brand-green/30"
+                  : "border-brand-border hover:border-brand-green-200"
               }`}
             >
               <p className="text-sm text-muted">{stat.label}</p>
@@ -151,7 +151,7 @@ export function StatsOverview({ shops, snapshots = [] }: Props) {
             transition={{ duration: 0.25, ease: "easeOut" }}
             className="overflow-hidden"
           >
-            <div className="mt-4 rounded-xl border border-exit-border bg-card p-4 shadow-sm">
+            <div className="mt-4 rounded-xl border border-brand-border bg-card p-4 shadow-sm">
               <p className="mb-2 text-sm font-medium text-muted">
                 {stats.find((s) => s.key === expanded)?.label} — 30 dagen trend
               </p>

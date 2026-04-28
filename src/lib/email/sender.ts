@@ -29,7 +29,10 @@ function getTransporter() {
 
 export async function sendEmail(input: SendInput): Promise<void> {
   const t = getTransporter();
-  const fromName = process.env.EMAIL_FROM_NAME || "EXIT Toys Indexing";
+  const fromName =
+    process.env.EMAIL_FROM_NAME ||
+    process.env.NEXT_PUBLIC_BRAND_NAME ||
+    "Indexing Dashboard";
   const fromEmail = process.env.GMAIL_USER!;
   await t.sendMail({
     from: `"${fromName}" <${fromEmail}>`,

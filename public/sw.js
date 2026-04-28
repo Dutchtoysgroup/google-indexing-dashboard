@@ -1,4 +1,4 @@
-// EXIT Toys Indexing Dashboard — service worker
+// Indexing Dashboard — service worker
 // Strategy:
 //   - Navigation requests: network-first, fall back to cached shell.
 //   - /api/*: network-only (always fresh data).
@@ -12,7 +12,7 @@ const OFFLINE_URL = "/";
 const PRECACHE_URLS = [
   "/",
   "/favicon.png",
-  "/exit-logo.svg",
+  "/logo.svg",
   "/icon-192.png",
   "/icon-512.png",
   "/apple-icon.png",

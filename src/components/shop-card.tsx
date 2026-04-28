@@ -21,7 +21,7 @@ export function ShopCard({ shop }: Props) {
   return (
     <Link
       href={`/shop/${shop.shop_id}`}
-      className="block rounded-xl border border-exit-border bg-card p-5 shadow-sm transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 hover:border-exit-green-200"
+      className="block rounded-xl border border-brand-border bg-card p-5 shadow-sm transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 hover:border-brand-green-200"
     >
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
@@ -37,7 +37,7 @@ export function ShopCard({ shop }: Props) {
       </div>
 
       {/* Progress bar */}
-      <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-exit-green-50">
+      <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-brand-green-50">
         <div
           className={`h-full rounded-full ${barColor} transition-all duration-700`}
           style={{ width: `${coverage}%` }}

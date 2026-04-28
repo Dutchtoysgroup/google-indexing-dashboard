@@ -33,7 +33,11 @@ export async function POST(
 
   try {
     const report = await buildReport(null);
-    const subject = `[EXIT Indexing] Testmail — ${report.totals.inspections_since} inspecties, ${report.totals.pushes_since} indexeringsverzoeken`;
+    const brandShort =
+      process.env.NEXT_PUBLIC_BRAND_SHORT ||
+      process.env.NEXT_PUBLIC_BRAND_NAME ||
+      "Indexing";
+    const subject = `[${brandShort} Indexing] Testmail — ${report.totals.inspections_since} inspecties, ${report.totals.pushes_since} indexeringsverzoeken`;
     const unsubscribeUrl = `${baseUrl}/uitschrijven?token=${encodeURIComponent(sub.unsubscribe_token)}`;
     const { html, text } = await renderReportEmail({
       report,
@@ -55,7 +59,7 @@ export async function POST(
     await logEmail({
       schedule_id: null,
       recipient: sub.email,
-      subject: "[EXIT Indexing] Testmail",
+      subject: `[${process.env.NEXT_PUBLIC_BRAND_SHORT || process.env.NEXT_PUBLIC_BRAND_NAME || "Indexing"} Indexing] Testmail`,
       status: "failed",
       error: msg,
     }).catch(() => {});

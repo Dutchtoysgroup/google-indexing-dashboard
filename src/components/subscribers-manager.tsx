@@ -151,7 +151,7 @@ export function SubscribersManager({ initialSubscribers, schedules }: Props) {
       {/* Aanmelden formulier */}
       <form
         onSubmit={onSubmitSignup}
-        className="rounded-xl border border-exit-border bg-card p-5 shadow-sm"
+        className="rounded-xl border border-brand-border bg-card p-5 shadow-sm"
       >
         <label className="block text-sm font-medium text-foreground">
           Aanmelden voor het indexing-rapport
@@ -165,12 +165,12 @@ export function SubscribersManager({ initialSubscribers, schedules }: Props) {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="naam@voorbeeld.nl"
-          className="mt-3 w-full rounded-lg border border-exit-border bg-card px-3 py-2 text-sm focus:border-exit-green focus:outline-none focus:ring-1 focus:ring-exit-green"
+          className="mt-3 w-full rounded-lg border border-brand-border bg-card px-3 py-2 text-sm focus:border-brand-green focus:outline-none focus:ring-1 focus:ring-brand-green"
         />
 
         <p className="mt-4 text-xs font-medium text-muted">Schedules</p>
         {enabledSchedules.length === 0 ? (
-          <p className="mt-2 rounded-lg border border-exit-border/50 bg-exit-green-50 p-3 text-xs text-muted">
+          <p className="mt-2 rounded-lg border border-brand-border/50 bg-brand-green-50 p-3 text-xs text-muted">
             Nog geen actieve schedules. Maak er eerst een aan in de sectie hieronder.
           </p>
         ) : (
@@ -178,13 +178,13 @@ export function SubscribersManager({ initialSubscribers, schedules }: Props) {
             {enabledSchedules.map((s) => (
               <label
                 key={s.id}
-                className="flex items-start gap-3 cursor-pointer rounded-lg border border-exit-border/50 p-3 hover:border-exit-green-200"
+                className="flex items-start gap-3 cursor-pointer rounded-lg border border-brand-border/50 p-3 hover:border-brand-green-200"
               >
                 <input
                   type="checkbox"
                   checked={selectedForSignup.has(s.id)}
                   onChange={() => setSelectedForSignup((prev) => toggle(prev, s.id))}
-                  className="mt-0.5 h-4 w-4 shrink-0 accent-exit-green"
+                  className="mt-0.5 h-4 w-4 shrink-0 accent-brand-green"
                 />
                 <div className="min-w-0 flex-1">
                   <p className="text-sm font-medium text-foreground">{s.name}</p>
@@ -198,7 +198,7 @@ export function SubscribersManager({ initialSubscribers, schedules }: Props) {
         <button
           type="submit"
           disabled={signupPending || enabledSchedules.length === 0}
-          className="mt-4 rounded-lg bg-exit-green px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-exit-green-dark disabled:cursor-not-allowed disabled:opacity-50"
+          className="mt-4 rounded-lg bg-brand-green px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-brand-green-dark disabled:cursor-not-allowed disabled:opacity-50"
         >
           {signupPending ? "Aanmelden…" : "Aanmelden"}
         </button>
@@ -210,8 +210,8 @@ export function SubscribersManager({ initialSubscribers, schedules }: Props) {
       </form>
 
       {/* Lijst */}
-      <div className="rounded-xl border border-exit-border bg-card shadow-sm">
-        <div className="border-b border-exit-border p-4">
+      <div className="rounded-xl border border-brand-border bg-card shadow-sm">
+        <div className="border-b border-brand-border p-4">
           <h3 className="font-semibold text-foreground">
             Abonnees ({activeCount} actief
             {subscribers.length - activeCount > 0
@@ -225,7 +225,7 @@ export function SubscribersManager({ initialSubscribers, schedules }: Props) {
             Nog geen abonnees. Voeg er hierboven een toe.
           </p>
         ) : (
-          <ul className="divide-y divide-exit-border/40">
+          <ul className="divide-y divide-brand-border/40">
             {subscribers.map((s) => {
               const isEditing = editingId === s.id;
               const linkedNames = s.schedule_ids
@@ -264,14 +264,14 @@ export function SubscribersManager({ initialSubscribers, schedules }: Props) {
                           <button
                             type="button"
                             onClick={() => sendTestTo(s)}
-                            className="rounded-lg border border-exit-border bg-card px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:border-exit-green-200"
+                            className="rounded-lg border border-brand-border bg-card px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:border-brand-green-200"
                           >
                             Testmail
                           </button>
                           <button
                             type="button"
                             onClick={() => startEditing(s)}
-                            className="rounded-lg border border-exit-border bg-card px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:border-exit-green-200"
+                            className="rounded-lg border border-brand-border bg-card px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:border-brand-green-200"
                           >
                             Bewerk keuzes
                           </button>
@@ -288,7 +288,7 @@ export function SubscribersManager({ initialSubscribers, schedules }: Props) {
                   </div>
 
                   {isEditing && (
-                    <div className="rounded-lg border border-exit-border/50 bg-exit-green-50 p-3 space-y-2">
+                    <div className="rounded-lg border border-brand-border/50 bg-brand-green-50 p-3 space-y-2">
                       {enabledSchedules.length === 0 ? (
                         <p className="text-xs text-muted">
                           Geen actieve schedules beschikbaar.
@@ -303,7 +303,7 @@ export function SubscribersManager({ initialSubscribers, schedules }: Props) {
                               type="checkbox"
                               checked={editSelection.has(sch.id)}
                               onChange={() => setEditSelection((prev) => toggle(prev, sch.id))}
-                              className="mt-0.5 h-4 w-4 shrink-0 accent-exit-green"
+                              className="mt-0.5 h-4 w-4 shrink-0 accent-brand-green"
                             />
                             <div className="min-w-0 flex-1">
                               <p className="text-sm font-medium text-foreground">{sch.name}</p>
@@ -317,14 +317,14 @@ export function SubscribersManager({ initialSubscribers, schedules }: Props) {
                           type="button"
                           onClick={() => saveEditing(s)}
                           disabled={editPending}
-                          className="rounded-lg bg-exit-green px-3 py-1.5 text-xs font-medium text-white hover:bg-exit-green-dark disabled:opacity-50"
+                          className="rounded-lg bg-brand-green px-3 py-1.5 text-xs font-medium text-white hover:bg-brand-green-dark disabled:opacity-50"
                         >
                           {editPending ? "Opslaan…" : "Opslaan"}
                         </button>
                         <button
                           type="button"
                           onClick={cancelEditing}
-                          className="rounded-lg border border-exit-border bg-card px-3 py-1.5 text-xs font-medium text-foreground hover:border-exit-green-200"
+                          className="rounded-lg border border-brand-border bg-card px-3 py-1.5 text-xs font-medium text-foreground hover:border-brand-green-200"
                         >
                           Annuleer
                         </button>

@@ -31,7 +31,7 @@ export function TrendChart({ data, title = "Indexering trend" }: Props) {
 
   if (chartData.length === 0) {
     return (
-      <div className="rounded-xl border border-exit-border bg-card p-6 shadow-sm">
+      <div className="rounded-xl border border-brand-border bg-card p-6 shadow-sm">
         <h3 className="mb-4 text-lg font-semibold text-foreground">{title}</h3>
         <p className="text-sm text-muted">
           Nog geen trend data beschikbaar. Data verschijnt na de eerste scan.
@@ -41,7 +41,7 @@ export function TrendChart({ data, title = "Indexering trend" }: Props) {
   }
 
   return (
-    <div className="rounded-xl border border-exit-border bg-card p-6 shadow-sm">
+    <div className="rounded-xl border border-brand-border bg-card p-6 shadow-sm">
       <h3 className="mb-4 text-lg font-semibold text-foreground">{title}</h3>
       <ResponsiveContainer width="100%" height={300}>
         <AreaChart data={chartData}>

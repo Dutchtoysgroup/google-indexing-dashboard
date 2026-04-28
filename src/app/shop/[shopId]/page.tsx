@@ -72,7 +72,7 @@ export default async function ShopPage({ params, searchParams }: Props) {
       <div className="flex items-center gap-4">
         <Link
           href="/"
-          className="flex h-8 w-8 items-center justify-center rounded-lg border border-exit-border text-muted transition-colors hover:text-exit-green hover:border-exit-green-200"
+          className="flex h-8 w-8 items-center justify-center rounded-lg border border-brand-border text-muted transition-colors hover:text-brand-green hover:border-brand-green-200"
         >
           &larr;
         </Link>
@@ -106,14 +106,14 @@ export default async function ShopPage({ params, searchParams }: Props) {
 
       {/* Recent Pushed URLs */}
       {recentPushes.length > 0 && (
-        <div className="rounded-xl border border-exit-border bg-card shadow-sm">
-          <div className="border-b border-exit-border p-4">
+        <div className="rounded-xl border border-brand-border bg-card shadow-sm">
+          <div className="border-b border-brand-border p-4">
             <h3 className="font-semibold text-foreground">Recent ingediende URLs</h3>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-exit-border/50 text-left text-xs text-muted">
+                <tr className="border-b border-brand-border/50 text-left text-xs text-muted">
                   <th className="px-4 py-3 font-medium">URL</th>
                   <th className="px-4 py-3 font-medium">Type</th>
                   <th className="px-4 py-3 font-medium">Status</th>
@@ -123,13 +123,13 @@ export default async function ShopPage({ params, searchParams }: Props) {
               </thead>
               <tbody>
                 {recentPushes.map((row) => (
-                  <tr key={row.id} className="border-b border-exit-border/30 hover:bg-exit-green-50 transition-colors">
+                  <tr key={row.id} className="border-b border-brand-border/30 hover:bg-brand-green-50 transition-colors">
                     <td className="max-w-md truncate px-4 py-3">
                       <a
                         href={row.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-exit-green hover:underline"
+                        className="text-brand-green hover:underline"
                       >
                         {row.url.replace(/^https?:\/\/www\./, "")}
                       </a>
@@ -148,7 +148,7 @@ export default async function ShopPage({ params, searchParams }: Props) {
                       {formatDateTime(row.last_pushed)}
                     </td>
                     <td className="px-4 py-3 text-center">
-                      <span className="inline-flex items-center rounded-full bg-exit-green-100 px-2 py-0.5 text-xs font-medium text-exit-green-dark">
+                      <span className="inline-flex items-center rounded-full bg-brand-green-100 px-2 py-0.5 text-xs font-medium text-brand-green-dark">
                         {row.push_count}x
                       </span>
                     </td>

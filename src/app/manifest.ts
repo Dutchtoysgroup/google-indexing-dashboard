@@ -1,11 +1,11 @@
 import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
+  const brandName = process.env.NEXT_PUBLIC_BRAND_NAME || "Indexing Dashboard";
   return {
-    name: "EXIT Toys Indexing Dashboard",
+    name: `${brandName} — Indexing Dashboard`,
     short_name: "Indexing",
-    description:
-      "Monitor de Google indexeringsstatus van alle EXIT Toys webshops",
+    description: `Monitor de Google indexeringsstatus van alle webshops van ${brandName}.`,
     start_url: "/",
     display: "standalone",
     orientation: "portrait",

@@ -34,7 +34,7 @@ function shortenState(state: string): string {
 export function CoverageStateChart({ data }: Props) {
   if (data.length === 0) {
     return (
-      <div className="rounded-xl border border-exit-border bg-card p-6 shadow-sm">
+      <div className="rounded-xl border border-brand-border bg-card p-6 shadow-sm">
         <h3 className="mb-4 text-lg font-semibold text-foreground">Redenen Niet Geindexeerd</h3>
         <p className="text-sm text-muted">Geen data beschikbaar.</p>
       </div>
@@ -47,7 +47,7 @@ export function CoverageStateChart({ data }: Props) {
   }));
 
   return (
-    <div className="rounded-xl border border-exit-border bg-card p-6 shadow-sm">
+    <div className="rounded-xl border border-brand-border bg-card p-6 shadow-sm">
       <div className="mb-4 flex items-center justify-between">
         <h3 className="text-lg font-semibold text-foreground">Redenen Niet Geindexeerd</h3>
         <span className="text-xs text-muted">Top {chartData.length} coverage states</span>

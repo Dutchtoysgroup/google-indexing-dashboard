@@ -17,14 +17,17 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const BRAND_NAME = process.env.NEXT_PUBLIC_BRAND_NAME || "Indexing Dashboard";
+const BRAND_SHORT = process.env.NEXT_PUBLIC_BRAND_SHORT || BRAND_NAME;
+
 export const metadata: Metadata = {
-  title: "EXIT Toys Indexing Dashboard",
-  description: "Monitor de Google indexeringsstatus van alle EXIT Toys webshops",
-  applicationName: "EXIT Indexing",
+  title: `${BRAND_NAME} — Indexing Dashboard`,
+  description: `Monitor de Google indexeringsstatus van alle webshops van ${BRAND_NAME}.`,
+  applicationName: `${BRAND_SHORT} Indexing`,
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
-    title: "EXIT Indexing",
+    title: `${BRAND_SHORT} Indexing`,
   },
   formatDetection: {
     telephone: false,
@@ -59,15 +62,15 @@ export default function RootLayout({
         <ThemeInitScript />
       </head>
       <body className="min-h-full bg-background font-sans">
-        <header className="bg-exit-header sticky top-0 z-30 pt-[env(safe-area-inset-top)]">
+        <header className="bg-brand-header sticky top-0 z-30 pt-[env(safe-area-inset-top)]">
           <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-2 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:px-6 sm:py-3">
             <Link
               href="/"
               className="flex items-center gap-3 min-w-0"
             >
               <Image
-                src="/exit-logo.svg"
-                alt="EXIT Toys"
+                src="/logo.svg"
+                alt={BRAND_NAME}
                 width={70}
                 height={52}
                 className="h-9 w-auto sm:h-[42px] shrink-0"

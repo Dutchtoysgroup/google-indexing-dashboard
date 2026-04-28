@@ -62,11 +62,11 @@ export function ShopStatsOverview({
     { label: "Geindexeerd", value: summary.indexed, color: "text-green-600", key: "indexed" },
     { label: "Niet geindexeerd", value: summary.not_indexed, color: "text-red-500", key: "notIndexed" },
     { label: "Niet gecheckt", value: summary.not_checked, color: "text-yellow-600", key: "unknown" },
-    { label: "Coverage", value: `${coverage}%`, color: "text-exit-green", key: "coverage" },
+    { label: "Coverage", value: `${coverage}%`, color: "text-brand-green", key: "coverage" },
   ] as const;
 
   const requestStats = [
-    { label: "Totale verzoeken", value: extraStats.total_pushes, color: "text-exit-green", key: "totalPushes", isText: false },
+    { label: "Totale verzoeken", value: extraStats.total_pushes, color: "text-brand-green", key: "totalPushes", isText: false },
     { label: "Nooit verzoek", value: extraStats.never_pushed, color: "text-orange-500", key: "neverPushed", isText: false },
     { label: "Nooit gecheckt", value: extraStats.never_inspected, color: "text-yellow-600", key: "neverInspected", isText: false },
     { label: "Laatste verzoek", value: formatDateTime(extraStats.last_pushed), color: "text-foreground", key: "lastPushed", isText: true },
@@ -235,8 +235,8 @@ export function ShopStatsOverview({
                 onClick={() => setExpanded(expanded === stat.key ? null : stat.key)}
                 className={`w-full text-left cursor-pointer rounded-xl border bg-card p-4 shadow-sm transition-all duration-200 hover:shadow-md ${
                   expanded === stat.key
-                    ? "border-exit-green ring-1 ring-exit-green/30"
-                    : "border-exit-border hover:border-exit-green-200"
+                    ? "border-brand-green ring-1 ring-brand-green/30"
+                    : "border-brand-border hover:border-brand-green-200"
                 }`}
               >
                 <p className="text-sm text-muted">{stat.label}</p>
@@ -260,8 +260,8 @@ export function ShopStatsOverview({
                 onClick={() => setExpanded(expanded === stat.key ? null : stat.key)}
                 className={`w-full text-left cursor-pointer rounded-xl border bg-card p-4 shadow-sm transition-all duration-200 hover:shadow-md ${
                   expanded === stat.key
-                    ? "border-exit-green ring-1 ring-exit-green/30"
-                    : "border-exit-border hover:border-exit-green-200"
+                    ? "border-brand-green ring-1 ring-brand-green/30"
+                    : "border-brand-border hover:border-brand-green-200"
                 }`}
               >
                 <p className="text-sm text-muted">{stat.label}</p>
@@ -283,7 +283,7 @@ export function ShopStatsOverview({
             transition={{ duration: 0.25, ease: "easeOut" }}
             className="overflow-hidden"
           >
-            <div className="rounded-xl border border-exit-border bg-card p-4 shadow-sm">
+            <div className="rounded-xl border border-brand-border bg-card p-4 shadow-sm">
               <p className="mb-2 text-sm font-medium text-muted">
                 {allStats.find((s) => s.key === expanded)?.label} — detail
               </p>

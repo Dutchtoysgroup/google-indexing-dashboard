@@ -37,7 +37,7 @@ export function ShopComparisonChart({ shops }: Props) {
   }
 
   return (
-    <div className="rounded-xl border border-exit-border bg-card p-6 shadow-sm">
+    <div className="rounded-xl border border-brand-border bg-card p-6 shadow-sm">
       <h3 className="mb-4 text-lg font-semibold text-foreground">Coverage per Webshop</h3>
       <ResponsiveContainer width="100%" height={Math.max(300, chartData.length * 36)}>
         <BarChart data={chartData} layout="vertical" margin={{ left: 20 }}>

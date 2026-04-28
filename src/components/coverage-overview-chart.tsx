@@ -27,7 +27,7 @@ export function CoverageOverviewChart({ indexed, notIndexed, notChecked }: Props
 
   if (data.length === 0) {
     return (
-      <div className="rounded-xl border border-exit-border bg-card p-6">
+      <div className="rounded-xl border border-brand-border bg-card p-6">
         <h3 className="mb-4 text-lg font-semibold text-foreground">Coverage Overzicht</h3>
         <p className="text-sm text-muted">Geen data beschikbaar.</p>
       </div>
@@ -35,7 +35,7 @@ export function CoverageOverviewChart({ indexed, notIndexed, notChecked }: Props
   }
 
   return (
-    <div className="rounded-xl border border-exit-border bg-card p-6 shadow-sm flex flex-col">
+    <div className="rounded-xl border border-brand-border bg-card p-6 shadow-sm flex flex-col">
       <h3 className="mb-4 text-lg font-semibold text-foreground">Coverage Overzicht</h3>
 
       {/* Donut with centered percentage */}

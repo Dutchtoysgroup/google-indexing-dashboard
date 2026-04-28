@@ -132,10 +132,10 @@ export function EmailTemplate({
             <Row>
               <Column style={{ verticalAlign: "middle" }}>
                 <Img
-                  src={`${baseUrl}/exit-logo-transparent.png`}
+                  src={`${baseUrl}/logo-email.png`}
                   width="70"
                   height="52"
-                  alt="EXIT Toys"
+                  alt={process.env.NEXT_PUBLIC_BRAND_NAME || "Logo"}
                   style={{ display: "block", marginBottom: "4px" }}
                 />
               </Column>
@@ -271,7 +271,7 @@ export function EmailTemplate({
             </Text>
             <Hr className="email-border-bottom" style={{ margin: "12px 0", borderColor: c.border }} />
             <Text className="email-muted" style={{ fontSize: "11px", color: c.muted, margin: 0 }}>
-              Deze mail wordt automatisch verstuurd door de EXIT Toys Indexing pipeline.
+              Deze mail wordt automatisch verstuurd door de Indexing pipeline.
             </Text>
             {unsubscribeUrl && (
               <Text className="email-muted" style={{ fontSize: "11px", color: c.muted, margin: "6px 0 0 0" }}>

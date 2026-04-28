@@ -30,7 +30,7 @@ export function ActivityChart({ data, title = "API Activiteit (30 dagen)" }: Pro
 
   if (chartData.length === 0) {
     return (
-      <div className="rounded-xl border border-exit-border bg-card p-6 shadow-sm">
+      <div className="rounded-xl border border-brand-border bg-card p-6 shadow-sm">
         <h3 className="mb-4 text-lg font-semibold text-foreground">{title}</h3>
         <p className="text-sm text-muted">Nog geen API activiteit gelogd.</p>
       </div>
@@ -38,7 +38,7 @@ export function ActivityChart({ data, title = "API Activiteit (30 dagen)" }: Pro
   }
 
   return (
-    <div className="rounded-xl border border-exit-border bg-card p-6 shadow-sm">
+    <div className="rounded-xl border border-brand-border bg-card p-6 shadow-sm">
       <h3 className="mb-4 text-lg font-semibold text-foreground">{title}</h3>
       <ResponsiveContainer width="100%" height={300}>
         <BarChart data={chartData}>

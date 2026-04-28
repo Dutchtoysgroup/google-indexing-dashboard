@@ -13,7 +13,7 @@ function formatDate(dateStr: string): string {
 function ApiTypeBadge({ type }: { type: string }) {
   if (type === "indexing") {
     return (
-      <span className="inline-flex items-center rounded-full bg-exit-green-100 px-2 py-0.5 text-xs font-medium text-exit-green-dark">
+      <span className="inline-flex items-center rounded-full bg-brand-green-100 px-2 py-0.5 text-xs font-medium text-brand-green-dark">
         Verzoek
       </span>
     );
@@ -28,7 +28,7 @@ function ApiTypeBadge({ type }: { type: string }) {
 export function ActivityFeed({ entries }: Props) {
   if (entries.length === 0) {
     return (
-      <div className="rounded-xl border border-exit-border bg-card p-6 shadow-sm">
+      <div className="rounded-xl border border-brand-border bg-card p-6 shadow-sm">
         <h3 className="mb-4 text-lg font-semibold text-foreground">Recente activiteit</h3>
         <p className="text-sm text-muted">Nog geen API activiteit gelogd.</p>
       </div>
@@ -36,7 +36,7 @@ export function ActivityFeed({ entries }: Props) {
   }
 
   return (
-    <div className="rounded-xl border border-exit-border bg-card p-6 shadow-sm">
+    <div className="rounded-xl border border-brand-border bg-card p-6 shadow-sm">
       <h3 className="mb-4 text-lg font-semibold text-foreground">Recente activiteit</h3>
       <div className="max-h-[380px] space-y-1.5 overflow-y-auto scrollbar-thin pr-1">
         {entries.map((entry) => {
@@ -44,7 +44,7 @@ export function ActivityFeed({ entries }: Props) {
           return (
             <div
               key={entry.id}
-              className="flex items-center gap-2 rounded-lg border border-exit-border/50 px-3 py-2 transition-colors duration-150 hover:bg-exit-green-50"
+              className="flex items-center gap-2 rounded-lg border border-brand-border/50 px-3 py-2 transition-colors duration-150 hover:bg-brand-green-50"
             >
               <span className="shrink-0 text-xs text-muted tabular-nums">
                 {formatDate(entry.date)}
