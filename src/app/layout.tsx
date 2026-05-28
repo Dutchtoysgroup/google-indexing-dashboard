@@ -77,9 +77,14 @@ export default function RootLayout({
                 priority
               />
               <div className="min-w-0">
-                <h1 className="text-base sm:text-lg font-semibold text-white truncate">
-                  Indexing Dashboard
-                </h1>
+                <div className="flex items-center gap-2">
+                  <h1 className="text-base sm:text-lg font-semibold text-white truncate">
+                    Indexing Dashboard
+                  </h1>
+                  <span className="rounded-full bg-white/10 px-1.5 py-0.5 text-[9px] font-medium uppercase tracking-wider text-white/70">
+                    v1
+                  </span>
+                </div>
                 <p className="text-[11px] sm:text-xs text-white/50 truncate">
                   Google Search Console
                 </p>
