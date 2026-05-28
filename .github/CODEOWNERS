@@ -1,0 +1,20 @@
+# CODEOWNERS for google-indexing-dashboard
+#
+# Owners are requested for review automatically when a PR is opened.
+# Order matters: the last matching pattern takes precedence.
+#
+# Docs: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-security/customizing-your-repository/about-code-owners
+
+# Default owner for everything in the repo
+*       @svendijk2408
+
+# Workflows and CI config
+/.github/                           @svendijk2408
+/.github/workflows/                 @svendijk2408
+
+# Infrastructure and deployment
+/vercel.json                        @svendijk2408
+/.env*                              @svendijk2408
+
+# Documentation
+*.md                                @svendijk2408
