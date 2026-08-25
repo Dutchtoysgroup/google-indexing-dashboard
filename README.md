@@ -302,15 +302,20 @@ De map `migrations/` bevat SQL-bestanden die in volgorde uitgevoerd moeten worde
 migrations/
 ├── 001_email_tables.sql
 ├── 002_email_subscribers.sql
-└── 003_subscriber_schedules.sql
+├── 003_subscriber_schedules.sql
+├── 004_priority_urls.sql
+└── 005_push_priority.sql
 ```
+
+`004` en `005` worden ook door de Python-tool aangemaakt via `init_db()`; draai
+je die tool al, dan staan die tabellen er waarschijnlijk al.
 
 ### Optie A: via de Neon SQL Editor (eenvoudigste)
 
 1. Ga naar je Neon-project op https://console.neon.tech.
 2. Open links **SQL Editor**.
 3. Open `migrations/001_email_tables.sql` in je editor, kopieer de inhoud, plak in de SQL editor en klik op **Run**.
-4. Herhaal voor `002_…` en `003_…`.
+4. Herhaal voor `002_…` tot en met `005_…`.
 
 ### Optie B: via de command line
 
@@ -321,6 +326,8 @@ Met `psql` (Postgres command line tool):
 psql "$DATABASE_URL" -f migrations/001_email_tables.sql
 psql "$DATABASE_URL" -f migrations/002_email_subscribers.sql
 psql "$DATABASE_URL" -f migrations/003_subscriber_schedules.sql
+psql "$DATABASE_URL" -f migrations/004_priority_urls.sql
+psql "$DATABASE_URL" -f migrations/005_push_priority.sql
 ```
 
 Of in één commando:
