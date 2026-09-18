@@ -1,9 +1,10 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "crons": [
+  "redirects": [
     {
-      "path": "/api/cron/email-scheduler",
-      "schedule": "0 6,10,14,18 * * *"
+      "source": "/:path*",
+      "destination": "https://dtg-google-indexing-dashboard-weu.azurewebsites.net/:path*",
+      "permanent": false
     }
   ]
 }

@@ -9,9 +9,12 @@ export function ThemeToggle() {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    const stored = (localStorage.getItem("theme") as Theme | null) ?? "light";
-    setTheme(stored);
-    setMounted(true);
+    const timer = window.setTimeout(() => {
+      const stored = (localStorage.getItem("theme") as Theme | null) ?? "light";
+      setTheme(stored);
+      setMounted(true);
+    }, 0);
+    return () => window.clearTimeout(timer);
   }, []);
 
   function toggle() {

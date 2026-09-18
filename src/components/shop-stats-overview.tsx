@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   AreaChart,
   Area,
@@ -51,6 +51,12 @@ export function ShopStatsOverview({
   apiActivity,
 }: Props) {
   const [expanded, setExpanded] = useState<string | null>(null);
+  const [now, setNow] = useState<number | null>(null);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => setNow(Date.now()), 0);
+    return () => window.clearTimeout(timer);
+  }, []);
 
   const coverage =
     summary.total_urls > 0
@@ -200,9 +206,9 @@ export function ShopStatsOverview({
       const dateStr = key === "lastPushed" ? extraStats.last_pushed : extraStats.last_inspected;
       if (!dateStr) return <p className="text-xs text-muted p-4">Nog nooit uitgevoerd.</p>;
       const d = new Date(dateStr);
-      const daysAgo = Math.max(0, Math.floor((Date.now() - d.getTime()) / (1000 * 60 * 60 * 24)));
-      const hoursAgo = Math.max(0, Math.floor((Date.now() - d.getTime()) / (1000 * 60 * 60)));
-      const label = daysAgo === 0 ? `${hoursAgo}u geleden` : `${daysAgo}d geleden`;
+      const daysAgo = now === null ? null : Math.max(0, Math.floor((now - d.getTime()) / (1000 * 60 * 60 * 24)));
+      const hoursAgo = now === null ? null : Math.max(0, Math.floor((now - d.getTime()) / (1000 * 60 * 60)));
+      const label = daysAgo === null ? "" : daysAgo === 0 ? `${hoursAgo}u geleden` : `${daysAgo}d geleden`;
       return (
         <div className="flex items-center gap-4 p-2">
           <div>

@@ -1,5 +1,12 @@
 # Google Indexing Dashboard
 
+> **Productie sinds 18 september 2026:** dashboard op Azure App Service
+> `dtg-google-indexing-dashboard-weu` in `Marketing-Dashboard-RG`, data in
+> `dtg_data.app_indexing` op de centrale Azure PostgreSQL-server. De oude
+> Vercel-URL verwijst door naar Azure. De Neon- en Vercel-installatiestappen
+> verderop beschrijven alleen de oorspronkelijke opzet en mogen niet meer voor
+> productie worden gebruikt. Deploy loopt via `.github/workflows/deploy-azure.yml`.
+
 Een dashboard om de Google-indexeringsstatus van één of meerdere webshops in de gaten te houden. Het laat per webshop en per dag zien welke URLs in Google staan, welke (nog) niet, hoeveel indexeringsverzoeken er zijn verstuurd en hoe de coverage zich over de tijd ontwikkelt. Ook kan het dashboard automatisch e-mailrapporten versturen.
 
 Dit is **alleen het dashboard** — het visualiseert data die door een aparte pipeline wordt verzameld. De pipeline scant je sitemaps, controleert de indexeringsstatus via de Google URL Inspection API en stuurt indexeringsverzoeken via de Google Indexing API.

@@ -1,9 +1,38 @@
-import { neon } from "@neondatabase/serverless";
+import { DefaultAzureCredential } from "@azure/identity";
+import { Pool, type QueryResultRow } from "pg";
 import { unstable_cache } from "next/cache";
 
+let pool: Pool | undefined;
+
 export function getDb() {
-  const sql = neon(process.env.DATABASE_URL!);
-  return sql;
+  if (!pool) {
+    const connectionString = process.env.DATABASE_URL;
+    if (!connectionString) throw new Error("DATABASE_URL ontbreekt");
+    const url = new URL(connectionString);
+    if (process.env.DATABASE_AUTH === "entra" && url.password) {
+      throw new Error("Entra-verbinding mag geen wachtwoord in DATABASE_URL hebben");
+    }
+    const credential = new DefaultAzureCredential();
+    pool = new Pool({
+      host: url.hostname,
+      port: Number(url.port || 5432),
+      database: decodeURIComponent(url.pathname.slice(1)),
+      user: decodeURIComponent(url.username),
+      password: process.env.DATABASE_AUTH === "entra"
+        ? async () => (await credential.getToken("https://ossrdbms-aad.database.windows.net/.default")).token
+        : decodeURIComponent(url.password),
+      ssl: { rejectUnauthorized: true },
+      options: "-c search_path=app_indexing",
+      max: 10,
+    });
+  }
+  const dbPool = pool;
+  return async (strings: TemplateStringsArray, ...values: unknown[]): Promise<QueryResultRow[]> => {
+    const query = strings.reduce((text, part, index) =>
+      text + (index ? `$${index}` : "") + part, "");
+    const result = await dbPool.query(query, values);
+    return result.rows;
+  };
 }
 
 const DASHBOARD_TAG = "dashboard";

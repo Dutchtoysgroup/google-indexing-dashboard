@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { TYPE_LABELS, type PriorityRow } from "@/lib/push-priority";
+import { TYPE_LABELS, type PriorityRow } from "@/lib/push-priority-shared";
 
 type Props = { initialRows: PriorityRow[] };
 

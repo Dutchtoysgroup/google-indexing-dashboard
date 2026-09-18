@@ -1,0 +1,38 @@
+name: Deploy indexing dashboard to Azure
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: {}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Build standalone dashboard
+        env:
+          NEXT_PUBLIC_SHOPS_CONFIG: ${{ secrets.INDEXING_SHOPS_CONFIG }}
+          NEXT_PUBLIC_BASE_URL: https://dtg-google-indexing-dashboard-weu.azurewebsites.net
+          DATABASE_URL: postgresql://dtg-google-indexing-dashboard-weu@dtg-data-platform-pg.postgres.database.azure.com:5432/dtg_data
+          DATABASE_AUTH: entra
+        run: |
+          npm ci
+          npm run build
+          cp -r .next/static .next/standalone/.next/static
+          cp -r public .next/standalone/public
+          mkdir -p .next/standalone/App_Data/jobs/triggered
+          cp -r webjobs/email-scheduler .next/standalone/App_Data/jobs/triggered/
+          cd .next/standalone && zip -qr ../../app.zip .
+      - name: Deploy to Azure App Service
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: dtg-google-indexing-dashboard-weu
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: app.zip

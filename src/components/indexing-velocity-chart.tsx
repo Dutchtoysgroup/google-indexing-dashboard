@@ -34,9 +34,6 @@ export function IndexingVelocityChart({ data }: Props) {
     delta: d.indexed_count - data[i].indexed_count,
   }));
 
-  const maxDelta = Math.max(...chartData.map((d) => d.delta));
-  const minDelta = Math.min(...chartData.map((d) => d.delta));
-
   return (
     <div className="rounded-xl border border-brand-border bg-card p-6 shadow-sm">
       <div className="mb-4 flex items-center justify-between">
