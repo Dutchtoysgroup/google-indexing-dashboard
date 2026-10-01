@@ -1,4 +1,4 @@
-import nodemailer from "nodemailer";
+import nodemailer, { type Transporter } from "nodemailer";
 
 export type SendInput = {
   to: string;
@@ -7,7 +7,7 @@ export type SendInput = {
   text?: string;
 };
 
-let transporter: nodemailer.Transporter | null = null;
+let transporter: Transporter | null = null;
 
 function getTransporter() {
   if (transporter) return transporter;
