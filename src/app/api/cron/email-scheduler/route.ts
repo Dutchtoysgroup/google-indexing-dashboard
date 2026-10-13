@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { createHash, timingSafeEqual } from "node:crypto";
 import { buildReport } from "@/lib/email/report-data";
 import { renderReportEmail } from "@/lib/email/render";
 import { sendEmail } from "@/lib/email/sender";
@@ -17,12 +18,21 @@ function unauthorized() {
 }
 
 export async function GET(req: Request) {
-  // Vercel Cron stuurt altijd Authorization: Bearer ${CRON_SECRET}.
-  // Lokaal mag het ook werken zonder als CRON_SECRET niet gezet is.
+  // De scheduler stuurt Authorization: Bearer ${CRON_SECRET}.
+  // Alleen expliciete development mag zonder secret werken. Elke andere
+  // omgeving faalt gesloten vóór databasequeries of mailverwerking.
   const expected = process.env.CRON_SECRET;
-  if (expected) {
-    const auth = req.headers.get("authorization");
-    if (auth !== `Bearer ${expected}`) return unauthorized();
+  if (!expected?.trim()) {
+    if (process.env.NODE_ENV !== "development") {
+      return NextResponse.json({ error: "cron_not_configured" }, { status: 503 });
+    }
+  } else {
+    // Vaste digestlengtes voorkomen een lengtefout of vroege tokenvergelijking.
+    const suppliedHash = createHash("sha256")
+      .update(req.headers.get("authorization") ?? "")
+      .digest();
+    const expectedHash = createHash("sha256").update(`Bearer ${expected}`).digest();
+    if (!timingSafeEqual(suppliedHash, expectedHash)) return unauthorized();
   }
 
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://google-indexing-dashboard.vercel.app";

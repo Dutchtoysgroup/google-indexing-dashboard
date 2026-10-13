@@ -207,7 +207,7 @@ Het dashboard kan dagelijks of wekelijks een rapport-e-mail versturen met de bel
 
 ### 6.2 Env-vars invullen
 
-In `.env.local` (en op Vercel):
+In `.env.local` en de Azure App Service-instellingen:
 
 ```bash
 GMAIL_USER="jouw.adres@gmail.com"
@@ -215,11 +215,24 @@ GMAIL_APP_PASSWORD="abcd efgh ijkl mnop"
 CRON_SECRET="een-willekeurige-lange-string"
 ```
 
-`CRON_SECRET` is een wachtwoord dat het dashboard gebruikt om te controleren of een binnenkomend mail-verzoek echt van Vercel komt. Genereer een willekeurige string, bijv. via:
+`CRON_SECRET` beveiligt `/api/cron/email-scheduler`. De scheduler stuurt
+`Authorization: Bearer <CRON_SECRET>`; de route vergelijkt dit constant-time.
+Op Azure staat het secret in de App Service-instellingen en gebruikt de
+meegeleverde WebJob dezelfde waarde. Genereer een willekeurige string, bijv. via:
 
 ```bash
 openssl rand -hex 32
 ```
+
+In productie is een niet-leeg secret verplicht. Ontbreekt het of bestaat het
+alleen uit witruimte, dan geeft de route HTTP 503 (`cron_not_configured`),
+zonder schedules op te halen of mails te verwerken. Een ontbrekende of onjuiste
+Authorization-header geeft HTTP 401. Alleen bij expliciet
+`NODE_ENV=development` kan de route zonder geconfigureerd secret worden getest;
+als er lokaal wel een secret staat, is authenticatie ook daar verplicht.
+
+`npm test` controleert dit met de echte routehandler en nagebootste database- en
+mailfuncties; de tests versturen geen e-mails.
 
 ### 6.3 Schedule en abonnees aanmaken
 
@@ -229,19 +242,14 @@ openssl rand -hex 32
 4. Maak een schedule (bijv. dagelijks om 07:00, of wekelijks op maandag).
 5. Klik op *Testmail versturen* om te kijken of alles werkt.
 
-### 6.4 Cron werkt al automatisch
+### 6.4 Scheduler op Azure
 
-Het bestand [`vercel.json`](vercel.json) bevat al een Vercel Cron-instelling:
-
-```json
-{
-  "crons": [
-    { "path": "/api/cron/email-scheduler", "schedule": "0 * * * *" }
-  ]
-}
-```
-
-Dat betekent: elk uur controleert Vercel of er een schedule is dat verstuurd moet worden. Je hoeft hier niets voor in te stellen — het werkt zodra je deployt op Vercel.
+De Azure-deploy bundelt de WebJob in [`webjobs/email-scheduler`](webjobs/email-scheduler).
+`settings.job` bevat het tijdschema; `run.js` roept de cronroute aan met
+`NEXT_PUBLIC_BASE_URL` en `CRON_SECRET` uit de App Service-instellingen. De WebJob
+stopt met een fout als een van deze instellingen ontbreekt of de route een
+foutstatus teruggeeft. De route zelf controleert het secret ook, zodat directe
+verzoeken zonder geldige authenticatie geen mailrun kunnen activeren.
 
 ---
 
