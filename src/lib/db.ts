@@ -4,7 +4,7 @@ import { unstable_cache } from "next/cache";
 
 let pool: Pool | undefined;
 
-export function getDb() {
+export function getPool() {
   if (!pool) {
     const connectionString = process.env.DATABASE_URL;
     if (!connectionString) throw new Error("DATABASE_URL ontbreekt");
@@ -26,7 +26,11 @@ export function getDb() {
       max: 10,
     });
   }
-  const dbPool = pool;
+  return pool;
+}
+
+export function getDb() {
+  const dbPool = getPool();
   return async (strings: TemplateStringsArray, ...values: unknown[]): Promise<QueryResultRow[]> => {
     const query = strings.reduce((text, part, index) =>
       text + (index ? `$${index}` : "") + part, "");

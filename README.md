@@ -247,9 +247,53 @@ mailfuncties; de tests versturen geen e-mails.
 De Azure-deploy bundelt de WebJob in [`webjobs/email-scheduler`](webjobs/email-scheduler).
 `settings.job` bevat het tijdschema; `run.js` roept de cronroute aan met
 `NEXT_PUBLIC_BASE_URL` en `CRON_SECRET` uit de App Service-instellingen. De WebJob
-stopt met een fout als een van deze instellingen ontbreekt of de route een
-foutstatus teruggeeft. De route zelf controleert het secret ook, zodat directe
+stopt met een fout als een van deze instellingen ontbreekt, de route een
+foutstatus teruggeeft of leveringen mislukt/onzeker zijn. De route zelf controleert het secret ook, zodat directe
 verzoeken zonder geldige authenticatie geen mailrun kunnen activeren.
+
+### 6.5 Afzonderlijke leveringen en retries
+
+Vereist platformmigratie `V135__indexing_email_deliveries.sql` uit
+`Dutchtoysgroup/dtg-data-platform`, toegepast vóór de app-deploy. Productietabellen
+staan in `app_indexing`; voer historische lokale migraties hier niet opnieuw uit.
+
+- `email_runs` reserveert één rapport per planning en Nederlandse kalenderdag.
+  `email_deliveries` heeft een unieke sleutel op planning, dag en genormaliseerd
+  e-mailadres. De ontvangers, onderwerp en gerenderde inhoud worden samen opgeslagen.
+- Een PostgreSQL-sessielock blijft gedurende de verwerking van een planning vast.
+  Een gelijktijdig cronrequest slaat die planning over (`busy`). Vóór SMTP wordt
+  elke claim duurzaam als `sending` vastgelegd. Een afgebroken databaseverbinding
+  maakt die levering dus niet opnieuw beschikbaar.
+- Succesvolle leveringen blijven `sent`. Expliciete SMTP-afwijzingen en aantoonbare fouten
+  vóór het verzenden worden `failed`; de volgende cronrun probeert alleen die
+  ontvangers opnieuw, met minimaal vijf minuten tussen pogingen. Retries gelden
+  ook buiten het oorspronkelijke planningsuur en gebruiken exact de bewaarde inhoud.
+  Uitgeschakelde planningen pauzeren ook retries; afgemelde ontvangers worden overgeslagen.
+- `last_sent_at` schuift pas op als alle leveringen van de rapportperiode zijn
+  verzonden of wegens afmelding geannuleerd. Het tijdstip van het rapport wordt
+  gebruikt, zodat een late retry de rapportperiode niet laat verspringen.
+  Een nieuw rapport begint bij het vorige bewaarde rapport, ook als er nog een
+  individuele retry openstaat. Oude retries blijven onafhankelijk bewaard.
+- SMTP kent geen transactie met PostgreSQL. Na een crash of een verbroken SMTP-
+  verbinding ná DATA kan acceptatie onbekend zijn. `sending` wordt bij herstel
+  `uncertain`; deze status wordt **nooit automatisch opnieuw verstuurd**. De cron-
+  respons bevat aantallen en de WebJob meldt de planning als aandachtspunt.
+
+Beheer kan open leveringen inspecteren met `SELECT schedule_id, period, recipient,
+status, attempts, attempted_at, error FROM app_indexing.email_deliveries WHERE
+status NOT IN ('sent', 'cancelled')`. Voor herstel van `uncertain`: controleer eerst
+SMTP-providerlogs/verzendbewijs. Markeer bij bewezen acceptatie `sent` met `sent_at`;
+zet alleen bij bewezen niet-acceptatie terug naar `failed`. Houd hierbij dezelfde
+transactielock (`pg_advisory_xact_lock(20261013, schedule_id)`) vast en leg het bewijs
+vast in `error`. Zonder bewijs blijft de levering onzeker. Een volgende cronrun
+rondt de periode af of probeert de vrijgegeven levering opnieuw.
+
+De regressietests versturen geen echte mail. `npm test` test authenticatie en
+WebJob-foutmeldingen. Voor de concurrency-, retry- en crashtests op macOS:
+`INDEXING_TEST_DATABASE=1 npm test`. Dit maakt en verwijdert een wegwerpdatabase
+op PostgreSQL via `/tmp:5432` onder de huidige OS-gebruiker; productie-credentials
+worden niet gelezen. De fixture in `tests/fixtures/` is de exacte, via SHA-256
+gecontroleerde kopie van V135; alleen de productie-role-grant wordt lokaal overgeslagen.
 
 ---
 

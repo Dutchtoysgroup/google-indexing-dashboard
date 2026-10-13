@@ -88,11 +88,6 @@ export async function deleteSchedule(id: number): Promise<boolean> {
   return rows.length > 0;
 }
 
-export async function markScheduleSent(id: number): Promise<void> {
-  const sql = getDb();
-  await sql`UPDATE email_schedules SET last_sent_at = NOW() WHERE id = ${id}`;
-}
-
 export async function logEmail(entry: {
   schedule_id: number | null;
   recipient: string;
@@ -117,43 +112,4 @@ export async function recentLog(limit = 20): Promise<EmailLogEntry[]> {
     LIMIT ${limit}
   `;
   return rows as EmailLogEntry[];
-}
-
-/**
- * Zoek schedules die NU moeten draaien.
- * - enabled
- * - vandaag (NL tijd) in days_of_week
- * - uur van time_of_day == huidig NL uur
- * - nog niet verzonden vandaag (last_sent_at < today at time_of_day, of NULL)
- */
-export async function getDueSchedules(now = new Date()): Promise<EmailSchedule[]> {
-  const sql = getDb();
-  // Huidige NL uur + ISO dag (1..7)
-  const nlParts = new Intl.DateTimeFormat("en-GB", {
-    timeZone: "Europe/Amsterdam",
-    hour: "2-digit", minute: "2-digit", hour12: false,
-    weekday: "short", year: "numeric", month: "2-digit", day: "2-digit",
-  }).formatToParts(now);
-  const get = (t: string) => nlParts.find((p) => p.type === t)?.value ?? "";
-  const hour = parseInt(get("hour"), 10);
-  const weekdayMap: Record<string, number> = {
-    Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6, Sun: 7,
-  };
-  const isoDay = weekdayMap[get("weekday")] ?? 1;
-  // YYYY-MM-DD in NL
-  const nlDate = `${get("year")}-${get("month")}-${get("day")}`;
-
-  const rows = await sql`
-    SELECT id, name, enabled, time_of_day::text, days_of_week,
-           last_sent_at::text, created_at::text
-    FROM email_schedules
-    WHERE enabled = TRUE
-      AND ${isoDay} = ANY(days_of_week)
-      AND EXTRACT(HOUR FROM time_of_day)::int = ${hour}
-      AND (
-        last_sent_at IS NULL
-        OR last_sent_at < (${nlDate}::date + time_of_day) AT TIME ZONE 'Europe/Amsterdam'
-      )
-  `;
-  return rows as EmailSchedule[];
 }

@@ -25,21 +25,11 @@ function setup(environment) {
         return timingSafeEqual(a, b);
       },
     },
-    "@/lib/email/schedules": {
-      getDueSchedules: record("getDueSchedules", [{ id: 1, name: "Test", last_sent_at: null }]),
-      logEmail: record("logEmail"),
-      markScheduleSent: record("markScheduleSent"),
+    "@/lib/email/deliveries": {
+      runEmailScheduler: record("runEmailScheduler", {
+        checked: 1, results: [{ id: 1, status: "sent", sent: 1, failed: 0, uncertain: 0 }],
+      }),
     },
-    "@/lib/email/subscribers": {
-      getActiveSubscribersForSchedule: record("getActiveSubscribersForSchedule", [
-        { email: "test@example.invalid", unsubscribe_token: "test-unsubscribe" },
-      ]),
-    },
-    "@/lib/email/report-data": {
-      buildReport: record("buildReport", { totals: { inspections_since: 1, pushes_since: 1 } }),
-    },
-    "@/lib/email/render": { renderReportEmail: record("renderReportEmail", { html: "test", text: "test" }) },
-    "@/lib/email/sender": { sendEmail: record("sendEmail") },
   };
   const exports = {};
   runInNewContext(route, {
@@ -99,15 +89,14 @@ test("valid production authentication executes the mocked mailjob normally", asy
   const response = await route.GET(request("Bearer test-secret"));
   assert.equal(response.status, 200);
   assert.deepEqual(await response.json(), {
-    checked: 1, results: [{ id: 1, status: "sent", sent: 1, failed: 0 }],
+    checked: 1, results: [{ id: 1, status: "sent", sent: 1, failed: 0, uncertain: 0 }],
   });
   assert.deepEqual(route.comparisons, [[32, 32]]);
-  assert.deepEqual(route.calls, ["getDueSchedules", "getActiveSubscribersForSchedule", "buildReport",
-    "renderReportEmail", "sendEmail", "logEmail", "markScheduleSent"]);
+  assert.deepEqual(route.calls, ["runEmailScheduler"]);
 });
 
 test("only explicit development retains the secret-free local workflow", async () => {
   const route = setup({ NODE_ENV: "development" });
   assert.equal((await route.GET(request())).status, 200);
-  assert.ok(route.calls.includes("sendEmail"));
+  assert.ok(route.calls.includes("runEmailScheduler"));
 });

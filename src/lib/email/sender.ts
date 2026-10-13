@@ -14,15 +14,18 @@ function getTransporter() {
   const user = process.env.GMAIL_USER;
   const pass = process.env.GMAIL_APP_PASSWORD;
   if (!user || !pass) {
-    throw new Error(
+    throw Object.assign(new Error(
       "GMAIL_USER en GMAIL_APP_PASSWORD env vars zijn verplicht voor e-mail verzending."
-    );
+    ), { code: "ESENDCONFIG" });
   }
   transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
     port: 465,
     secure: true,
     auth: { user, pass },
+    connectionTimeout: 15_000,
+    greetingTimeout: 15_000,
+    socketTimeout: 60_000,
   });
   return transporter;
 }
