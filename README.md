@@ -245,7 +245,10 @@ mailfuncties; de tests versturen geen e-mails.
 ### 6.4 Scheduler op Azure
 
 De Azure-deploy bundelt de WebJob in [`webjobs/email-scheduler`](webjobs/email-scheduler).
-`settings.job` bevat het tijdschema; `run.js` roept de cronroute aan met
+`settings.job` bevat het tijdschema: elk kwartier, in UTC. Een planning gaat uit
+bij de eerste run vanaf de gekozen tijd (Europe/Amsterdam) tot een uur later, dus
+elke HH:MM werkt in zomer- én wintertijd; `email_runs` voorkomt een tweede
+verzending binnen dezelfde dag. `run.js` roept de cronroute aan met
 `NEXT_PUBLIC_BASE_URL` en `CRON_SECRET` uit de App Service-instellingen. De WebJob
 stopt met een fout als een van deze instellingen ontbreekt, de route een
 foutstatus teruggeeft of leveringen mislukt/onzeker zijn. De route zelf controleert het secret ook, zodat directe

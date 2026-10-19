@@ -41,8 +41,11 @@ async function prepare(client: PoolClient, id: number, now: Date, deps: Dependen
     FROM email_schedules s
     WHERE id = $1 AND enabled
       AND EXTRACT(ISODOW FROM $2::timestamptz AT TIME ZONE 'Europe/Amsterdam')::int = ANY(days_of_week)
-      AND EXTRACT(HOUR FROM time_of_day) = EXTRACT(HOUR FROM $2::timestamptz AT TIME ZONE 'Europe/Amsterdam')
-      AND ($2::timestamptz AT TIME ZONE 'Europe/Amsterdam')::time >= time_of_day
+      -- Send window: from the planned local time until one hour later. The
+      -- WebJob runs every 15 minutes in UTC, so any HH:MM is reached in both
+      -- summer and winter time without depending on the job's own clock.
+      AND ($2::timestamptz AT TIME ZONE 'Europe/Amsterdam') >= ($2::timestamptz AT TIME ZONE 'Europe/Amsterdam')::date + time_of_day
+      AND ($2::timestamptz AT TIME ZONE 'Europe/Amsterdam') < ($2::timestamptz AT TIME ZONE 'Europe/Amsterdam')::date + time_of_day + interval '1 hour'
       AND (last_sent_at IS NULL OR last_sent_at <
         (($2::timestamptz AT TIME ZONE 'Europe/Amsterdam')::date + time_of_day) AT TIME ZONE 'Europe/Amsterdam')
       AND NOT EXISTS (SELECT 1 FROM email_runs r WHERE r.schedule_id = s.id

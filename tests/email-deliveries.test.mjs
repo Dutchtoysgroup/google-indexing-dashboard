@@ -203,6 +203,35 @@ test("delivery ledger on real PostgreSQL", { skip: process.env.INDEXING_TEST_DAT
       assert.equal(f.sent.length, 0);
       assert.equal((await pool.query("SELECT * FROM email_runs")).rowCount, 0);
     });
+
+    await t.test("quarter-hourly WebJob sends every schedule once in both summer and winter time", async () => {
+      await pool.query("TRUNCATE email_schedules, email_subscribers, email_log RESTART IDENTITY CASCADE");
+      await pool.query(`INSERT INTO email_schedules (name,time_of_day,days_of_week)
+        VALUES ('Acht','08:00',ARRAY[1,2,3,4,5,6,7]),('Halftien','09:30',ARRAY[1,2,3,4,5,6,7]),
+          ('Tienvoornegen','08:50',ARRAY[1,2,3,4,5,6,7])`);
+      await pool.query("INSERT INTO email_subscribers(email,unsubscribe_token) VALUES ('a@example.invalid','a-token')");
+      await pool.query("INSERT INTO email_subscriber_schedules(subscriber_id,schedule_id) VALUES (1,1),(1,2),(1,3)");
+      const local = new Intl.DateTimeFormat("nl-NL", { timeZone: "Europe/Amsterdam", hour: "2-digit", minute: "2-digit" });
+      const sent = [];
+      let current;
+      const deps = {
+        pool,
+        buildReport: async () => ({ generatedAt: current.toISOString(), totals: { inspections_since: 0, pushes_since: 0 } }),
+        renderReportEmail: async () => ({ html: "report", text: "report" }),
+        sendEmail: async input => { sent.push({ schedule: input.subject.match(/\] (\S+) —/)[1], at: local.format(current) }); },
+      };
+      // Tuesday in CEST (UTC+2) and the Tuesday after the switch to CET (UTC+1).
+      for (const day of ["2026-10-13", "2026-10-27"]) {
+        sent.length = 0;
+        for (let minutes = 0; minutes < 24 * 60; minutes += 15) {
+          current = new Date(Date.parse(`${day}T00:00:00Z`) + minutes * 60_000);
+          await runEmailScheduler(deps, current);
+        }
+        // 08:50 is not on a quarter hour: it goes out at 09:00, within its hour.
+        assert.deepEqual(sent, [{ schedule: "Acht", at: "08:00" }, { schedule: "Tienvoornegen", at: "09:00" },
+          { schedule: "Halftien", at: "09:30" }], day);
+      }
+    });
   } finally {
     await pool.end();
     await admin.query(`DROP DATABASE ${database} WITH (FORCE)`);

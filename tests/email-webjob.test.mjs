@@ -23,3 +23,12 @@ test("WebJob accepts success and a schedule already owned by another worker", as
     await run(async () => Response.json({ results: [{ id: 1, status, failed: 0, uncertain: 0 }] }), environment, consoleStub);
   }
 });
+
+test("WebJob runs at least every 15 minutes, every hour, so any HH:MM is reached in CET and CEST", () => {
+  const { schedule } = JSON.parse(readFileSync(new URL("../webjobs/email-scheduler/settings.job", import.meta.url), "utf8"));
+  const [seconds, minutes, hours, ...rest] = schedule.split(" ");
+  assert.equal(seconds, "0");
+  assert.match(minutes, /^\*\/(5|10|15)$/);
+  assert.equal(hours, "*");
+  assert.deepEqual(rest, ["*", "*", "*"]);
+});
