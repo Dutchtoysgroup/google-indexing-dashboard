@@ -10,7 +10,7 @@
     "test": "node --test tests/*.test.mjs"
   },
   "dependencies": {
-    "@azure/identity": "^4.13.3",
+    "@azure/identity": "^4.14.1",
     "@react-email/components": "^1.0.12",
     "@react-email/render": "^2.0.6",
     "framer-motion": "^12.38.0",
