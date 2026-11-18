@@ -40,7 +40,7 @@ Voor je begint, regel je deze accounts en gegevens. Alles is gratis te beginnen:
 | **Neon Postgres database** | Hier slaat het dashboard alle data op | https://neon.tech |
 | **Vercel account** | Om het dashboard te hosten | https://vercel.com |
 | **GitHub account** | Om de code op te slaan en (optioneel) de pipeline-workflow vanuit het dashboard te triggeren | https://github.com |
-| **Gmail account met App Password** *(optioneel)* | Om e-mailrapporten te versturen | https://myaccount.google.com/apppasswords |
+| **SMTP-server of maildienst** *(optioneel)* | Om e-mailrapporten te versturen, bijv. Azure Communication Services, Microsoft 365, Brevo of Postmark | — |
 
 Daarnaast heb je op je computer nodig:
 
@@ -196,24 +196,32 @@ Pas deze hex-waarden aan naar de kleuren van je eigen merk. Onder `[data-theme="
 
 ## 6. E-mailrapporten instellen
 
-Het dashboard kan dagelijks of wekelijks een rapport-e-mail versturen met de belangrijkste cijfers. Dit verloopt via Gmail SMTP.
+Het dashboard kan dagelijks of wekelijks een rapport-e-mail versturen met de belangrijkste cijfers. Dit verloopt via een SMTP-server naar keuze; het dashboard is niet aan één provider gebonden.
 
-### 6.1 App Password aanmaken
+### 6.1 SMTP-gegevens regelen
 
-1. Zet 2-staps-verificatie aan op je Google-account: https://myaccount.google.com/security.
-2. Ga daarna naar https://myaccount.google.com/apppasswords.
-3. Maak een nieuwe app password aan met een logische naam zoals "Indexing Dashboard".
-4. Kopieer het 16-tekens wachtwoord — dat zie je maar één keer.
+Vraag bij je maildienst de SMTP-host, poort, gebruikersnaam en het wachtwoord
+(of de API-sleutel die als wachtwoord dient) op, en een afzenderadres dat de
+dienst mag versturen. Zet SPF/DKIM voor dat domein goed, anders belanden de
+rapporten in de spam.
 
 ### 6.2 Env-vars invullen
 
 In `.env.local` en de Azure App Service-instellingen:
 
 ```bash
-GMAIL_USER="jouw.adres@gmail.com"
-GMAIL_APP_PASSWORD="abcd efgh ijkl mnop"
+SMTP_HOST="smtp.jouwprovider.nl"
+SMTP_PORT="587"
+SMTP_USER="gebruikersnaam"
+SMTP_PASSWORD="wachtwoord-of-api-sleutel"
+EMAIL_FROM="rapport@jouwdomein.nl"
 CRON_SECRET="een-willekeurige-lange-string"
 ```
+
+`SMTP_PORT` is standaard `587` (STARTTLS); bij `465` wordt implicit TLS gebruikt.
+Met `SMTP_SECURE="true"` of `"false"` forceer je dat zelf. `EMAIL_FROM` valt
+terug op `SMTP_USER` als het leeg is. Laat `SMTP_USER` leeg voor een relay
+zonder authenticatie.
 
 `CRON_SECRET` beveiligt `/api/cron/email-scheduler`. De scheduler stuurt
 `Authorization: Bearer <CRON_SECRET>`; de route vergelijkt dit constant-time.
@@ -339,7 +347,7 @@ Na een redeploy verschijnt de knop op de Instellingen-pagina.
    - `NEXT_PUBLIC_SHOPS_CONFIG`
    - `NEXT_PUBLIC_BASE_URL` (zet dit op je Vercel-URL, bijv. `https://jouw-project.vercel.app`)
    - `CRON_SECRET`
-   - en optioneel de Gmail- en GitHub-vars uit §6 en §7.
+   - en optioneel de SMTP- en GitHub-vars uit §6 en §7.
 
    Zorg dat elk variabele bij **Production**, **Preview** én **Development** wordt aangevinkt (tenzij je expliciet onderscheid wilt).
 6. Klik op **Deploy**.
@@ -427,8 +435,9 @@ Het dashboard ziet wel een database, maar nog geen records. Twee oorzaken:
 
 ### E-mail wordt niet verstuurd
 
-- Klopt het Gmail App Password? (Niet het echte wachtwoord van je Gmail-account, maar het 16-tekens app password.)
-- Is 2-staps-verificatie aan op het Gmail-account?
+- Staan `SMTP_HOST`, `SMTP_USER`, `SMTP_PASSWORD` en `EMAIL_FROM` goed? De foutmelding in het verzendlog op **Instellingen** noemt de ontbrekende variabele.
+- Klopt de combinatie van poort en TLS (`587` met STARTTLS, `465` met `SMTP_SECURE`)?
+- Mag het afzenderadres via deze maildienst versturen (SPF/DKIM, geverifieerde afzender)?
 - Bekijk de logs op Vercel onder **Deployments → Functions → email-scheduler**.
 
 ### "GITHUB_PAT env var ontbreekt"
