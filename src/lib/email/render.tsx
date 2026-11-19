@@ -35,8 +35,8 @@ const c = {
 };
 
 // Dark-mode CSS. Wordt toegepast door Apple Mail, iOS Mail en Outlook.com
-// wanneer het systeem / account op dark mode staat. Gmail strip dit; daar
-// blijft de light-versie zichtbaar (wat prima leesbaar is).
+// wanneer het systeem / account op dark mode staat. Clients die dit strippen,
+// tonen de light-versie (wat prima leesbaar is).
 const DARK_STYLES = `
   :root { color-scheme: light dark; supported-color-schemes: light dark; }
   @media (prefers-color-scheme: dark) {
